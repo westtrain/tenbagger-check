@@ -120,3 +120,10 @@ The first version should not include:
 - Explain work to the user in Korean.
 - UI text may be Korean.
 - Code can use English variable names.
+
+## Git Rules
+
+- Do not run `git commit` unless the user explicitly asks.
+- Do not run `git push` unless the user explicitly asks.
+- After making code changes, only summarize the changed files and suggest a commit message.
+- The user will review the changes and decide whether to commit.
