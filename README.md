@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tenbagger Check
 
-## Getting Started
+**Tenbagger Check**는 관심 있는 종목이 장기 성장 후보인지 스스로 점검할 수 있게 도와주는 교육형 웹앱입니다.
 
-First, run the development server:
+이 프로젝트는 실제 종목을 추천하거나 수익을 예측하는 서비스가 아닙니다.  
+사용자가 투자 아이디어를 더 신중하게 검토할 수 있도록, 경험 많은 투자자들이 자주 확인하는 기준을 간단한 체크리스트 형태로 제공합니다.
+
+---
+
+## 프로젝트 목적
+
+많은 개인 투자자들은 유튜브, 블로그, 뉴스, SNS에서 특정 종목을 접한 뒤 감정적으로 매수 결정을 내리기 쉽습니다.
+
+Tenbagger Check는 이런 상황에서 사용자가 잠시 멈추고 다음 질문들을 스스로 점검하도록 돕습니다.
+
+- 이 회사가 속한 시장은 장기적으로 커질 가능성이 있는가?
+- 실제 성장 증거가 있는가?
+- 매출 증가가 이익 증가로 이어질 수 있는가?
+- 경쟁사가 쉽게 따라오기 어려운 강점이 있는가?
+- 현재 가격에 기대감이 너무 많이 반영되어 있지는 않은가?
+- 시장이 회사를 다시 평가할 만한 촉매가 있는가?
+- 내 투자 아이디어가 틀렸다는 신호는 무엇인가?
+
+---
+
+## 핵심 기능
+
+현재 버전은 다음 기능을 제공합니다.
+
+- 관심 종목명 입력
+- 7가지 투자 판단 기준 기반 체크리스트
+- 각 기준별 교육 설명 제공
+- 100점 만점 텐버거 체크 점수 계산
+- 점수 구간별 해석 제공
+- 강점 영역과 약점 영역 표시
+- 약점 기반 추가 조사 제안
+- 투자 추천이 아니라는 고지 표시
+
+---
+
+## 7가지 체크 기준
+
+이 앱은 다음 7가지 기준으로 종목 아이디어를 점검합니다.
+
+1. **시장 기회**  
+   회사가 속한 시장이 장기적으로 커질 가능성이 있는지 확인합니다.
+
+2. **성장 증거**  
+   매출, 수주, 신규 고객, 신제품 등 실제 성장 근거가 있는지 확인합니다.
+
+3. **이익 레버리지**  
+   매출이 늘어날 때 이익이 더 빠르게 늘어날 수 있는 구조인지 확인합니다.
+
+4. **경쟁 우위**  
+   기술력, 브랜드, 원가 경쟁력, 고객 락인 등 경쟁사가 쉽게 따라오기 어려운 강점이 있는지 확인합니다.
+
+5. **밸류에이션 부담**  
+   좋은 회사라도 이미 기대감이 과도하게 반영되어 있지는 않은지 확인합니다.
+
+6. **촉매**  
+   신제품, 대형 고객, 흑자전환, 산업 사이클 회복 등 시장이 회사를 다시 평가할 계기가 있는지 확인합니다.
+
+7. **리스크와 반증 조건**  
+   내 투자 아이디어가 틀렸다고 판단할 수 있는 경고 신호를 미리 정리합니다.
+
+---
+
+## 점수 체계
+
+총점은 100점입니다.
+
+| 기준 | 배점 |
+|---|---:|
+| 시장 기회 | 15점 |
+| 성장 증거 | 20점 |
+| 이익 레버리지 | 15점 |
+| 경쟁 우위 | 15점 |
+| 밸류에이션 부담 | 15점 |
+| 촉매 | 10점 |
+| 리스크와 반증 조건 | 10점 |
+
+점수 구간은 다음과 같이 해석합니다.
+
+| 점수 | 라벨 |
+|---:|---|
+| 80 ~ 100 | 강한 검토 후보 |
+| 60 ~ 79 | 관심 후보 |
+| 40 ~ 59 | 추가 근거 필요 |
+| 0 ~ 39 | 신중 검토 필요 |
+
+이 점수는 수익률 예측이 아니라 사용자의 자기 점검 결과입니다.
+
+---
+
+## 투자 관련 고지
+
+이 서비스는 투자 추천이 아닙니다.  
+제공되는 점수와 해석은 사용자의 자기 점검을 돕기 위한 참고 정보입니다.  
+모든 투자 판단과 책임은 투자자 본인에게 있습니다.
+
+이 앱은 다음을 제공하지 않습니다.
+
+- 매수 추천
+- 매도 추천
+- 목표가 제시
+- 수익률 예측
+- 실시간 주가 분석
+- 재무제표 자동 분석
+- AI 기반 종목 추천
+
+---
+
+## 기술 스택
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- React
+- App Router
+
+---
+
+## 실행 방법
+
+의존성 설치:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+npm install
