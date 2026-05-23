@@ -128,6 +128,40 @@ For Risks and Disconfirming Evidence:
 - [ ] 일부만 이해함 gives 5 points.
 - [ ] 거의 점검하지 못함 gives 0 points.
 
+## Evidence Memo Feature Checklist
+
+### Memo Input
+
+- [ ] Each of the seven checklist cards has a memo textarea.
+- [ ] Each memo textarea has the label "판단 근거 메모".
+- [ ] Each memo textarea has a helpful placeholder.
+- [ ] The user can write a different memo for each category.
+- [ ] The user can edit a memo after writing it.
+- [ ] Memo fields are optional.
+- [ ] The app does not require memo text to show the result.
+
+### Memo State
+
+- [ ] Memo text is stored separately for each checklist category.
+- [ ] Changing one category memo does not change another category memo.
+- [ ] Changing memo text does not change the score.
+- [ ] Clearing memo text does not reset the selected answer.
+
+### Memo Result Display
+
+- [ ] The result section includes a "내 판단 근거" area.
+- [ ] If the user wrote memos, the result shows memos grouped by category.
+- [ ] If the user did not write any memos, the result shows "아직 작성한 판단 근거 메모가 없습니다."
+- [ ] The memo display is visually separated from the score interpretation.
+- [ ] User-written memo text is not transformed into a buy/sell recommendation.
+
+### Memo Scope
+
+- [ ] No database was added for memo storage.
+- [ ] No backend API was added for memo storage.
+- [ ] No localStorage was added in this step.
+- [ ] No new dependency was installed for memo functionality.
+
 ## Result Display Checklist
 
 ### Result Visibility

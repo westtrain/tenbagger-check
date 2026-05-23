@@ -411,6 +411,56 @@ Research suggestion if weak:
 
 투자 아이디어가 틀렸다고 볼 수 있는 경고 신호를 먼저 정리해보세요.
 
+## Evidence Memo Feature
+
+Add a simple evidence memo field to each of the seven checklist cards.
+
+Purpose:
+
+The memo feature should help users explain why they selected a certain judgment option.
+
+This makes the app more useful as a thinking tool, not just a button-based score calculator.
+
+Each checklist card should include:
+
+- A textarea for the user's reasoning or evidence
+- A short label: 판단 근거 메모
+- A placeholder that helps the user write useful evidence
+
+Suggested placeholder:
+
+이 항목에서 그렇게 판단한 이유를 간단히 적어보세요. 예: 최근 매출 성장, 신규 고객, 밸류에이션 부담, 리스크 요인 등
+
+Requirements:
+
+- The memo field should be optional.
+- The score should not depend on the memo text.
+- The result should still appear when stock name and all seven option selections are completed, even if memos are empty.
+- Memo state should be stored separately for each checklist category.
+- The user should be able to edit memos after writing them.
+- Do not save memos to a database.
+- Do not use localStorage in this step.
+- Do not add backend API.
+- Do not add new dependencies.
+
+Result display:
+
+In the result section, show a short "내 판단 근거" area.
+
+If the user wrote memos, display the written memos grouped by category.
+
+If the user did not write any memos, show:
+
+아직 작성한 판단 근거 메모가 없습니다.
+
+The memo display should be clearly separated from the score interpretation.
+
+Safety:
+
+Memo text is written by the user. The app should not transform user memo text into investment advice.
+
+Do not summarize the memo as a buy/sell recommendation.
+
 ## Result Requirements
 
 Show the result only after:
