@@ -127,3 +127,25 @@ The first version should not include:
 - Do not run `git push` unless the user explicitly asks.
 - After making code changes, only summarize the changed files and suggest a commit message.
 - The user will review the changes and decide whether to commit.
+
+## Scalability and Future Extension Rules
+
+This project is no longer just a coding practice app.
+
+Treat it as a real MVP that may be publicly launched.
+
+When implementing features, keep the current scope small but design the code so it can be extended later.
+
+Important principles:
+
+- Prefer simple but extensible structures.
+- Avoid hardcoding business logic directly inside UI markup when it is likely to grow.
+- Keep reusable data structures separate from rendering code when reasonable.
+- Use clear TypeScript types for important data such as stocks, checklist cards, answers, scores, memos, and share reports.
+- Keep scoring logic easy to test and change later.
+- Keep share report encode/decode logic isolated from UI components.
+- Keep stock search data structured so it can later be replaced by an API.
+- Do not over-engineer the app with unnecessary architecture.
+- Do not add backend, database, authentication, or external APIs unless explicitly requested.
+- When adding a feature, briefly explain how the implementation can be extended in the future.
+- If a quick implementation would block future expansion, mention the tradeoff before implementing.
