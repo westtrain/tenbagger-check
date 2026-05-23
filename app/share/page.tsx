@@ -124,9 +124,9 @@ export default async function SharePage({ searchParams }: SharePageProps) {
           {report.evidenceMemos.length > 0 ? (
             <div className="mt-5 divide-y divide-slate-200">
               {report.evidenceMemos.map((memo) => (
-                <div key={memo.id} className="py-4 first:pt-0 last:pb-0">
+                <div key={memo.id} className="min-w-0 py-4 first:pt-0 last:pb-0">
                   <p className="text-sm font-semibold text-slate-900">{memo.title}</p>
-                  <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">
+                  <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]">
                     {memo.memo}
                   </p>
                 </div>

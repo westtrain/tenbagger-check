@@ -418,9 +418,9 @@ export default function Home() {
                   {writtenMemos.length > 0 ? (
                     <div className="mt-3 space-y-3">
                       {writtenMemos.map(({ title, memo }) => (
-                        <div key={title} className="rounded-lg bg-slate-50 p-3">
+                        <div key={title} className="min-w-0 rounded-lg bg-slate-50 p-3">
                           <p className="text-sm font-semibold text-slate-900">{title}</p>
-                          <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600">
+                          <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]">
                             {memo}
                           </p>
                         </div>
