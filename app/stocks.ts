@@ -7,6 +7,8 @@ export type StockMetadata = {
   isCustom?: boolean;
 };
 
+export const customStockNameMaxLength = 40;
+
 export const localStocks: StockMetadata[] = [
   {
     id: "kospi-005930",
@@ -108,12 +110,15 @@ export function searchStocks(query: string, stocks: StockMetadata[] = localStock
     })
     .filter((result) => result.rank < 2)
     .sort((a, b) => a.rank - b.rank || a.stock.name.localeCompare(b.stock.name))
-    .map((result) => result.stock)
-    .slice(0, 6);
+    .map((result) => result.stock);
 }
 
-export function createCustomStock(input: string): StockMetadata {
+export function createCustomStock(input: string): StockMetadata | null {
   const name = input.trim();
+
+  if (!name || name.length > customStockNameMaxLength) {
+    return null;
+  }
 
   return {
     id: `custom-${name.toLowerCase().replace(/\s+/g, "-") || "stock"}`,

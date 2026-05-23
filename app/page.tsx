@@ -12,7 +12,12 @@ import {
   investmentDisclaimer,
   memoMaxLength,
 } from "./share-report";
-import { type StockMetadata, createCustomStock, searchStocks } from "./stocks";
+import {
+  type StockMetadata,
+  createCustomStock,
+  customStockNameMaxLength,
+  searchStocks,
+} from "./stocks";
 
 const noDataNotices = [
   "실시간 주가 데이터는 사용하지 않습니다.",
@@ -26,12 +31,15 @@ const memoPlaceholder =
 
 const memoTextClassName =
   "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
+const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
 
 function StockBadge({ stock }: { stock: StockMetadata }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">선택된 종목</p>
-      <p className="mt-2 text-lg font-bold text-slate-950">{stock.name}</p>
+      <p className={`mt-2 text-lg font-bold text-slate-950 ${stockNameTextClassName}`}>
+        {stock.name}
+      </p>
       {!stock.isCustom ? (
         <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
           <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">
@@ -55,7 +63,11 @@ export default function Home() {
   const [manualShareLink, setManualShareLink] = useState("");
 
   const stockResults = useMemo(() => searchStocks(searchQuery), [searchQuery]);
-  const canUseCustomStock = searchQuery.trim().length > 0;
+  const trimmedSearchQuery = searchQuery.trim();
+  const customStockNameLength = trimmedSearchQuery.length;
+  const canUseCustomStock =
+    customStockNameLength > 0 && customStockNameLength <= customStockNameMaxLength;
+  const customStockNameIsTooLong = customStockNameLength > customStockNameMaxLength;
 
   const answeredCards = checklistCards
     .map((card) => {
@@ -112,6 +124,10 @@ export default function Home() {
     }
 
     const customStock = createCustomStock(searchQuery);
+    if (!customStock) {
+      return;
+    }
+
     setSelectedStock(customStock);
     setSearchQuery(customStock.name);
   }
@@ -129,7 +145,11 @@ export default function Home() {
       };
     });
 
-    const stock = selectedStock ?? createCustomStock(searchQuery);
+    if (!selectedStock) {
+      throw new Error("Share report requires a selected stock.");
+    }
+
+    const stock = selectedStock;
 
     return {
       stock,
@@ -229,14 +249,31 @@ export default function Home() {
                 </div>
               ) : null}
 
-              {canUseCustomStock ? (
+              {trimmedSearchQuery ? (
                 <button
                   type="button"
+                  disabled={!canUseCustomStock}
                   onClick={handleUseCustomStock}
-                  className="mt-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50"
+                  className="mt-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"
                 >
-                  &quot;{searchQuery.trim()}&quot; 직접 입력으로 계속
+                  &quot;{trimmedSearchQuery}&quot; 직접 입력으로 계속
                 </button>
+              ) : null}
+              {trimmedSearchQuery ? (
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs leading-5">
+                  <span
+                    className={
+                      customStockNameIsTooLong ? "font-semibold text-rose-700" : "text-slate-500"
+                    }
+                  >
+                    직접 입력 종목명 {customStockNameLength} / {customStockNameMaxLength}
+                  </span>
+                  {customStockNameIsTooLong ? (
+                    <span className="text-rose-700">
+                      직접 입력은 {customStockNameMaxLength}자 이하로 줄여주세요.
+                    </span>
+                  ) : null}
+                </div>
               ) : null}
             </div>
 
@@ -367,7 +404,9 @@ export default function Home() {
             <div className="mt-5 grid min-w-0 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
               <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                 <p className="text-sm font-semibold text-slate-500">검토 종목</p>
-                <p className="mt-2 text-xl font-bold text-slate-950">{selectedStock.name}</p>
+                <p className={`mt-2 text-xl font-bold text-slate-950 ${stockNameTextClassName}`}>
+                  {selectedStock.name}
+                </p>
                 {!selectedStock.isCustom ? (
                   <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
                     <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">

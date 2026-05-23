@@ -11,6 +11,7 @@ const errorMessage =
 
 const memoTextClassName =
   "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
+const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
 
 type SharePageProps = {
   searchParams: Promise<{
@@ -62,9 +63,11 @@ export default async function SharePage({ searchParams }: SharePageProps) {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <section className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
-          <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_240px] lg:items-end">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+          <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_240px] lg:items-end">
+            <div className="min-w-0">
+              <h1
+                className={`text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl ${stockNameTextClassName}`}
+              >
                 {report.stock.name}
               </h1>
               {!report.stock.isCustom ? (

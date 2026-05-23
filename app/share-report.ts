@@ -234,19 +234,80 @@ export function getScoreResult(score: number) {
   };
 }
 
+const shareReportEncodingPrefix = "v2.";
+
+function bytesToBase64(bytes: Uint8Array) {
+  if (typeof btoa === "function") {
+    let binary = "";
+    const chunkSize = 0x8000;
+
+    for (let index = 0; index < bytes.length; index += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+    }
+
+    return btoa(binary);
+  }
+
+  return Buffer.from(bytes).toString("base64");
+}
+
+function base64ToBytes(base64: string) {
+  if (typeof atob === "function") {
+    const binary = atob(base64);
+    return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  }
+
+  return Uint8Array.from(Buffer.from(base64, "base64"));
+}
+
+function encodeBase64Url(value: string) {
+  return bytesToBase64(new TextEncoder().encode(value))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function decodeBase64Url(value: string) {
+  try {
+    const base64 = value
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .padEnd(Math.ceil(value.length / 4) * 4, "=");
+
+    return new TextDecoder().decode(base64ToBytes(base64));
+  } catch {
+    return null;
+  }
+}
+
 export function encodeShareReport(report: ShareReport) {
-  return encodeURIComponent(JSON.stringify(report));
+  return `${shareReportEncodingPrefix}${encodeBase64Url(JSON.stringify(report))}`;
+}
+
+function parseJsonReport(value: string): Partial<ShareReport> | null {
+  try {
+    return JSON.parse(value) as Partial<ShareReport>;
+  } catch {
+    return null;
+  }
 }
 
 function parseShareReportData(data: string): Partial<ShareReport> | null {
+  if (data.startsWith(shareReportEncodingPrefix)) {
+    const decoded = decodeBase64Url(data.slice(shareReportEncodingPrefix.length));
+    return decoded ? parseJsonReport(decoded) : null;
+  }
+
+  const decodedByRouter = parseJsonReport(data);
+
+  if (decodedByRouter) {
+    return decodedByRouter;
+  }
+
   try {
-    return JSON.parse(data) as Partial<ShareReport>;
+    return parseJsonReport(decodeURIComponent(data));
   } catch {
-    try {
-      return JSON.parse(decodeURIComponent(data)) as Partial<ShareReport>;
-    } catch {
-      return null;
-    }
+    return null;
   }
 }
 
