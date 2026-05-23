@@ -149,3 +149,12 @@ Important principles:
 - Do not add backend, database, authentication, or external APIs unless explicitly requested.
 - When adding a feature, briefly explain how the implementation can be extended in the future.
 - If a quick implementation would block future expansion, mention the tradeoff before implementing.
+
+## Command Execution Rules
+
+- Do not run `npm run lint` unless the user explicitly asks.
+- Do not run `npm run build` unless the user explicitly asks.
+- Do not run `npm run dev` unless the user explicitly asks.
+- Do not run long-running commands unless the user explicitly asks.
+- After making changes, explain which commands the user should run manually.
+- If a command is necessary to verify a fix, suggest the command instead of running it.
