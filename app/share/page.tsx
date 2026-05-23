@@ -39,7 +39,9 @@ export default async function SharePage({ searchParams }: SharePageProps) {
     return (
       <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-950 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
+          <p className="text-sm font-semibold text-slate-500">
+            나만의 종목 분석 공유 리포트
+          </p>
           <h1 className="mt-3 text-2xl font-bold text-slate-950">
             리포트를 열 수 없습니다
           </h1>
@@ -62,7 +64,9 @@ export default async function SharePage({ searchParams }: SharePageProps) {
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <section className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
+          <p className="text-sm font-semibold text-slate-500">
+            나만의 종목 분석 공유 리포트
+          </p>
           <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_240px] lg:items-end">
             <div className="min-w-0">
               <h1

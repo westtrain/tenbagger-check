@@ -190,13 +190,13 @@ export default function Home() {
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
         <header className="rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-8">
-          <p className="text-sm font-semibold text-slate-500">텐버거 체크</p>
+          <p className="text-sm font-semibold text-slate-500">나만의 종목 분석</p>
           <h1 className="mt-3 max-w-4xl text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
-            관심 종목을 감정적으로 판단하기 전에, 7가지 기준으로 먼저 점검해보세요.
+            혹시 이 종목, 텐버거 후보일까?
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
-            시장 기회, 성장 증거, 이익 레버리지, 경쟁 우위, 밸류에이션 부담, 촉매,
-            리스크를 차분히 확인하고 나만의 종목 판단 리포트를 만들어보세요.
+            시장 기회, 성장 증거, 밸류에이션 부담, 리스크까지 7가지 기준으로 차분히
+            평가하고 나만의 종목 판단 리포트를 만들어보세요.
           </p>
         </header>
 
@@ -497,7 +497,7 @@ export default function Home() {
                   <button
                     type="button"
                     onClick={handleCreateShareLink}
-                    className="mt-4 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
+                    className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-slate-700 sm:w-auto"
                   >
                     공유 링크 만들기
                   </button>
