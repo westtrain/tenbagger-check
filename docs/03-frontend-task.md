@@ -479,6 +479,353 @@ The result should include:
 - Suggested next research points
 - Not-investment-advice reminder
 
+## URL-Based Share Report Feature
+
+Add a URL-based share report feature for the MVP.
+
+This is a core product feature, not an experimental feature.
+
+## Purpose
+
+The share report feature should allow users to share their Tenbagger Check result with others.
+
+The shared page should not be a dead-end result page.
+
+It should:
+
+- Show the shared report clearly.
+- Make the user's reasoning interesting and readable.
+- Clearly state that the report is user-generated and not investment advice.
+- Encourage viewers to create their own report.
+
+## Share Flow
+
+The user flow should be:
+
+1. User enters a stock name.
+2. User completes all seven checklist cards.
+3. User writes evidence memos for each category.
+4. User sees the result.
+5. User clicks a "공유 링크 만들기" button.
+6. The app creates a URL-based share link.
+7. The share link is copied to the clipboard.
+8. A confirmation message is shown.
+9. Another person opens the share link.
+10. The share page displays a readable report.
+11. The share page includes a CTA button: "나도 내 관심 종목 체크하기".
+
+## Share Link Approach
+
+Use a database-free MVP approach.
+
+The first version should use URL data instead of a backend database.
+
+Suggested route:
+
+- `/share?data=...`
+
+The `data` query parameter should contain encoded report data.
+
+Do not add:
+
+- Backend API
+- Database
+- Authentication
+- Payment
+- External service
+- New dependency unless absolutely necessary
+
+## Shared Report Data
+
+The shared report should include:
+
+- Stock name
+- Total score
+- Score label
+- Score interpretation
+- Strongest areas
+- Weakest areas
+- Suggested next research points
+- Seven category judgments
+- User evidence memos
+- Created date or created timestamp
+- Required investment disclaimer
+
+The shared report must not include:
+
+- User name
+- Email
+- IP address
+- Login information
+- Any personal identifier
+
+## Evidence Memo Sharing
+
+Evidence memos should be included in the shared report.
+
+The value of the shared report comes not only from the score, but from the user's reasoning.
+
+However, the app must clearly label these memos as user-written content.
+
+Use labels such as:
+
+- 작성자의 판단 근거
+- 사용자가 직접 작성한 메모
+
+Avoid labels such as:
+
+- 공식 분석
+- 검증된 분석
+- 추천 사유
+- 매수 근거
+- 서비스 분석 의견
+
+The app must not present user memos as verified analysis, investment advice, or recommendations from Tenbagger Check.
+
+## Memo Length Limit
+
+Each evidence memo should have a reasonable length limit.
+
+Recommended limit:
+
+- 200 characters per category
+
+If the user reaches the limit, the UI should make the limit understandable.
+
+The purpose of this limit is to:
+
+- Keep the shared report readable.
+- Prevent excessively long URLs.
+- Avoid cluttered shared pages.
+- Encourage concise reasoning.
+
+## Main Result Page Share Button
+
+When the result is visible, show a share button.
+
+Button text:
+
+공유 링크 만들기
+
+Near the button, show a short notice:
+
+공유 링크에는 작성한 판단 근거 메모가 함께 포함됩니다.
+
+Also show a caution:
+
+개인정보, 민감한 정보, 타인에게 매수·매도를 권유하는 표현은 메모에 적지 않는 것이 좋습니다.
+
+## Share Link Creation
+
+When the user clicks the share button:
+
+1. Build a share report object from the current result.
+2. Encode it into a URL-safe format.
+3. Generate a `/share?data=...` URL.
+4. Copy the URL to the clipboard.
+5. Show a short success message.
+
+Suggested success message:
+
+공유 링크가 복사되었습니다.
+
+If copying fails, show a fallback message and allow the user to manually copy the link.
+
+## Share Report Page
+
+Create a share report page.
+
+Suggested path:
+
+- `src/app/share/page.tsx`
+
+The share page should read the `data` query parameter, decode it, and render the report.
+
+If the data is missing or invalid, show a friendly error message:
+
+공유 리포트를 불러올 수 없습니다. 링크가 잘못되었거나 손상되었을 수 있습니다.
+
+Also show a CTA button:
+
+나도 내 관심 종목 체크하기
+
+The CTA should link to:
+
+- `/`
+
+## Share Page Layout
+
+The shared page should be optimized for readability.
+
+The page should be calm, clear, and easy to understand at a glance.
+
+The share page should have this structure:
+
+1. Hero summary
+2. At-a-glance summary
+3. Author evidence memos
+4. Detailed checklist results
+5. Suggested next research points
+6. Investment disclaimer
+7. CTA button
+
+## 1. Hero Summary
+
+Show:
+
+- 텐버거 체크 공유 리포트
+- Stock name
+- Score
+- Score label
+- Short user-generated report notice
+
+Suggested notice:
+
+이 리포트는 사용자가 직접 선택하고 작성한 자기 점검 결과입니다. 투자 추천이 아닙니다.
+
+## 2. At-a-Glance Summary
+
+Show two compact sections:
+
+### 강점 영역
+
+Show the strongest areas.
+
+### 추가 확인 필요
+
+Show the weakest areas.
+
+The goal is to help viewers understand the report in a few seconds.
+
+## 3. Author Evidence Memos
+
+Show the user's evidence memos.
+
+Section title:
+
+작성자의 판단 근거
+
+Short notice:
+
+아래 내용은 사용자가 직접 작성한 메모이며, 텐버거 체크가 검증하거나 추천하는 내용이 아닙니다.
+
+Display only categories that have memo text.
+
+If no memos exist, show:
+
+작성된 판단 근거 메모가 없습니다.
+
+## 4. Detailed Checklist Results
+
+Show all seven category judgments.
+
+Each item should include:
+
+- Category title
+- Selected judgment label
+- Category score
+
+This section should be visually secondary to the summary and memo sections.
+
+## 5. Suggested Next Research Points
+
+Show research suggestions based on weak categories.
+
+This should help the viewer learn what to check next.
+
+## 6. Investment Disclaimer
+
+Show the required disclaimer:
+
+이 서비스는 투자 추천이 아닙니다. 제공되는 점수와 해석은 사용자의 자기 점검을 돕기 위한 참고 정보입니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.
+
+Also show this share-specific disclaimer:
+
+이 공유 리포트는 사용자가 직접 선택하고 작성한 내용을 바탕으로 생성되었습니다. 텐버거 체크는 해당 종목을 추천하거나 사용자 메모를 검증하지 않습니다.
+
+## 7. CTA Button
+
+At the bottom of the share page, show a clear CTA button.
+
+Button text:
+
+나도 내 관심 종목 체크하기
+
+This button should link to `/`.
+
+The share page should encourage viewers to create their own report.
+
+## Readability Requirements
+
+The share page must be readable and not cluttered.
+
+Design principles:
+
+- Important summary first.
+- User memos should be easy to scan.
+- Avoid too many small cards.
+- Use clear section headings.
+- Use enough spacing.
+- Keep the design mobile-friendly.
+- Avoid flashy trading-style colors.
+- Avoid urgent or hype-driven wording.
+
+## Safety Requirements
+
+The app itself must not add or generate investment recommendation wording.
+
+Do not add phrases such as:
+
+- 매수 추천
+- 매도 추천
+- 지금 사야 합니다
+- 이 종목은 10배 오릅니다
+- 수익 보장
+- 목표가
+- 강력 매수
+- 다음 텐버거 확정
+- Buy
+- Sell
+- Strong buy
+- Guaranteed return
+- Target price
+
+User-written memos may contain user text, but the app must clearly label it as user-written content and not verified by Tenbagger Check.
+
+## Technical Requirements
+
+Prefer simple implementation.
+
+Use:
+
+- TypeScript
+- React
+- Next.js App Router
+- Browser clipboard API
+- URL-safe encoding/decoding
+
+Do not use:
+
+- Backend API
+- Database
+- Authentication
+- External stock API
+- AI API
+- New dependencies unless clearly necessary
+
+## Final Check
+
+After implementation, verify:
+
+- Share button appears only after a complete result is available.
+- Share link includes score, label, category judgments, research suggestions, and memos.
+- Shared page loads correctly from `/share?data=...`.
+- Shared page is readable on mobile.
+- Shared page includes CTA back to `/`.
+- Shared page clearly says the report is user-generated and not investment advice.
+- Invalid or missing share data shows a friendly error.
+- No git commit or git push is run by Codex.
+
 ## Score Labels and Interpretations
 
 ### 80 to 100

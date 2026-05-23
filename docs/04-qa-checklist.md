@@ -275,6 +275,222 @@ The app must show this exact Korean disclaimer:
 - [ ] Cards do not overflow horizontally.
 - [ ] The seven-card checklist remains usable on mobile.
 
+## URL-Based Share Report Feature Checklist
+
+### Share Button
+
+- [ ] The share button appears only after a complete result is available.
+- [ ] The share button text is "공유 링크 만들기".
+- [ ] The UI explains that evidence memos will be included in the shared link.
+- [ ] The UI warns users not to write personal, sensitive, or investment-solicitation-like content in memos.
+- [ ] Clicking the share button creates a share link.
+- [ ] Clicking the share button copies the share link to the clipboard.
+- [ ] A success message is shown after copying.
+- [ ] If clipboard copy fails, the app provides a fallback way to manually copy the link.
+
+### Share Data
+
+- [ ] The share link contains encoded report data.
+- [ ] The share data includes stock name.
+- [ ] The share data includes total score.
+- [ ] The share data includes score label.
+- [ ] The share data includes score interpretation.
+- [ ] The share data includes strongest areas.
+- [ ] The share data includes weakest areas.
+- [ ] The share data includes suggested next research points.
+- [ ] The share data includes all seven category judgments.
+- [ ] The share data includes user evidence memos.
+- [ ] The share data includes created date or timestamp.
+- [ ] The share data does not include user name, email, IP address, login information, or personal identifiers.
+
+### Memo Sharing
+
+- [ ] Evidence memos are included in the shared report.
+- [ ] The shared page labels memos as "작성자의 판단 근거" or "사용자가 직접 작성한 메모".
+- [ ] The shared page clearly says memos are user-written content.
+- [ ] The shared page does not present memos as verified analysis from Tenbagger Check.
+- [ ] The shared page does not present memos as investment advice from Tenbagger Check.
+- [ ] Each memo has a reasonable character limit in the input UI.
+- [ ] The recommended limit is 200 characters per category.
+- [ ] The memo character limit is understandable to the user.
+
+### Share Page Route
+
+- [ ] A share page exists at `/share`.
+- [ ] The share page reads the `data` query parameter.
+- [ ] The share page decodes the report data.
+- [ ] The share page renders the decoded report.
+- [ ] If the data query parameter is missing, a friendly error message is shown.
+- [ ] If the data query parameter is invalid or corrupted, a friendly error message is shown.
+- [ ] The friendly error message says: "공유 리포트를 불러올 수 없습니다. 링크가 잘못되었거나 손상되었을 수 있습니다."
+- [ ] The error state includes a CTA button linking to `/`.
+
+### Share Page Layout
+
+The share page should include:
+
+- [ ] Hero summary section.
+- [ ] At-a-glance summary section.
+- [ ] Author evidence memos section.
+- [ ] Detailed checklist results section.
+- [ ] Suggested next research points section.
+- [ ] Investment disclaimer section.
+- [ ] CTA button section.
+
+### Hero Summary
+
+- [ ] The page title says "텐버거 체크 공유 리포트".
+- [ ] The stock name is clearly visible.
+- [ ] The score is clearly visible.
+- [ ] The score label is clearly visible.
+- [ ] The page explains that the report is user-generated.
+- [ ] The page explains that the report is not investment advice.
+
+### At-a-Glance Summary
+
+- [ ] Strongest areas are shown under "강점 영역".
+- [ ] Weakest areas are shown under "추가 확인 필요".
+- [ ] The summary is readable within a few seconds.
+- [ ] The summary appears before detailed checklist results.
+- [ ] The summary is not cluttered.
+
+### Author Evidence Memos
+
+- [ ] The section title is "작성자의 판단 근거".
+- [ ] The section includes this notice: "아래 내용은 사용자가 직접 작성한 메모이며, 텐버거 체크가 검증하거나 추천하는 내용이 아닙니다."
+- [ ] Only categories with memo text are displayed.
+- [ ] If no memos exist, the page shows "작성된 판단 근거 메모가 없습니다."
+- [ ] Memos are easy to scan.
+- [ ] Long memo text does not break the layout.
+
+### Detailed Checklist Results
+
+- [ ] All seven category judgments are shown.
+- [ ] Each item includes category title.
+- [ ] Each item includes selected judgment label.
+- [ ] Each item includes category score.
+- [ ] This section is visually secondary to the summary and memo sections.
+
+### Suggested Next Research Points
+
+- [ ] Research suggestions are shown based on weak categories.
+- [ ] Research suggestions encourage further research, not buying or selling.
+- [ ] If there are no weak areas, a general research suggestion is shown.
+
+### Share Page Disclaimer
+
+- [ ] The required investment disclaimer is visible:
+  "이 서비스는 투자 추천이 아닙니다. 제공되는 점수와 해석은 사용자의 자기 점검을 돕기 위한 참고 정보입니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다."
+- [ ] The share-specific disclaimer is visible:
+  "이 공유 리포트는 사용자가 직접 선택하고 작성한 내용을 바탕으로 생성되었습니다. 텐버거 체크는 해당 종목을 추천하거나 사용자 메모를 검증하지 않습니다."
+
+### CTA
+
+- [ ] The share page includes a CTA button.
+- [ ] The CTA button text is "나도 내 관심 종목 체크하기".
+- [ ] The CTA button links to `/`.
+- [ ] The CTA is visible after the report content.
+- [ ] The CTA encourages viewers to create their own report.
+
+### Share Page Readability
+
+- [ ] The most important summary appears first.
+- [ ] The page is easy to understand at a glance.
+- [ ] The page does not feel cluttered.
+- [ ] The page uses clear section headings.
+- [ ] The page has enough spacing.
+- [ ] The page works on mobile-sized screens.
+- [ ] The page avoids flashy trading-style colors.
+- [ ] The page avoids urgent or hype-driven wording.
+
+### Share Safety
+
+- [ ] The app itself does not generate investment recommendation wording.
+- [ ] The app itself does not say "매수 추천".
+- [ ] The app itself does not say "매도 추천".
+- [ ] The app itself does not say "지금 사야 합니다".
+- [ ] The app itself does not say "이 종목은 10배 오릅니다".
+- [ ] The app itself does not say "수익 보장".
+- [ ] The app itself does not say "목표가".
+- [ ] The app itself does not say "강력 매수".
+- [ ] The app itself does not say "다음 텐버거 확정".
+- [ ] User-written memos are clearly separated from Tenbagger Check's own UI text.
+- [ ] User-written memos are not labeled as official analysis.
+
+### Technical Scope
+
+- [ ] No backend API was added.
+- [ ] No database was added.
+- [ ] No authentication was added.
+- [ ] No external stock API was added.
+- [ ] No AI API was added.
+- [ ] No unnecessary dependency was installed.
+- [ ] Browser clipboard API is used for copying the share link.
+- [ ] URL-safe encoding/decoding is used.
+- [ ] Codex did not run `git commit`.
+- [ ] Codex did not run `git push`.
+
+### Manual Share Test Case 1: Create and Open Share Link
+
+Steps:
+
+1. Enter "SK하이닉스".
+2. Complete all seven checklist cards.
+3. Write short memos in at least three categories.
+4. Click "공유 링크 만들기".
+5. Open the copied link in a new browser tab.
+
+Expected result:
+
+- The share page opens successfully.
+- The report shows stock name, score, label, strengths, weaknesses, memos, detailed checklist results, research suggestions, disclaimers, and CTA.
+
+### Manual Share Test Case 2: Missing Share Data
+
+Steps:
+
+1. Open `/share` without a `data` query parameter.
+
+Expected result:
+
+- The page shows the friendly error message.
+- The page includes a CTA button linking to `/`.
+
+### Manual Share Test Case 3: Invalid Share Data
+
+Steps:
+
+1. Open `/share?data=invalid`.
+
+Expected result:
+
+- The page shows the friendly error message.
+- The page includes a CTA button linking to `/`.
+
+### Manual Share Test Case 4: Memo Length Limit
+
+Steps:
+
+1. Try writing more than 200 characters in a memo field.
+
+Expected result:
+
+- The input prevents or clearly limits the memo length.
+- The user can understand the character limit.
+
+### Manual Share Test Case 5: Mobile Readability
+
+Steps:
+
+1. Open a shared report.
+2. Resize the browser to mobile width or test on a phone.
+
+Expected result:
+
+- The report remains readable.
+- Sections are not cluttered.
+- CTA button is easy to tap.
+
 ## Technical Checklist
 
 ### Project Scope
