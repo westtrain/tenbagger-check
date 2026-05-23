@@ -176,6 +176,9 @@ const noDataNotices = [
   "점수는 사용자의 자기 평가에만 기반합니다.",
 ];
 
+const memoPlaceholder =
+  "이 항목에서 그렇게 판단한 근거를 간단히 적어보세요. 예: 최근 매출 성장, 신규 고객, 밸류에이션 부담, 주요 리스크 등";
+
 function getScoreResult(score: number) {
   if (score >= 80) {
     return {
@@ -211,6 +214,7 @@ function getScoreResult(score: number) {
 export default function Home() {
   const [stockName, setStockName] = useState("");
   const [answers, setAnswers] = useState<Record<string, AnswerKey>>({});
+  const [memos, setMemos] = useState<Record<string, string>>({});
 
   const answeredCards = checklistCards
     .map((card) => {
@@ -243,6 +247,14 @@ export default function Home() {
   const researchSuggestions = checklistCards
     .filter((card) => weakestAreas.includes(card.title))
     .map((card) => card.researchSuggestion);
+
+  const writtenMemos = checklistCards
+    .map((card) => {
+      const memo = memos[card.id]?.trim();
+
+      return memo ? { cardTitle: card.title, memo } : undefined;
+    })
+    .filter((memo): memo is { cardTitle: string; memo: string } => Boolean(memo));
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
@@ -348,6 +360,28 @@ export default function Home() {
                   );
                 })}
               </div>
+
+              <div className="mt-5">
+                <label
+                  htmlFor={`memo-${card.id}`}
+                  className="text-sm font-semibold text-slate-900"
+                >
+                  판단 근거 메모
+                </label>
+                <textarea
+                  id={`memo-${card.id}`}
+                  value={memos[card.id] ?? ""}
+                  onChange={(event) =>
+                    setMemos((currentMemos) => ({
+                      ...currentMemos,
+                      [card.id]: event.target.value,
+                    }))
+                  }
+                  placeholder={memoPlaceholder}
+                  rows={3}
+                  className="mt-2 w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-slate-700 focus:ring-4 focus:ring-slate-200"
+                />
+              </div>
             </article>
           ))}
         </section>
@@ -406,6 +440,26 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 p-4">
+                  <h3 className="font-semibold text-slate-950">내 판단 근거</h3>
+                  {writtenMemos.length > 0 ? (
+                    <div className="mt-3 space-y-3">
+                      {writtenMemos.map(({ cardTitle, memo }) => (
+                        <div key={cardTitle} className="rounded-lg bg-slate-50 p-3">
+                          <p className="text-sm font-semibold text-slate-900">{cardTitle}</p>
+                          <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-600">
+                            {memo}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      아직 작성한 판단 근거 메모가 없습니다.
+                    </p>
+                  )}
                 </div>
 
                 <p className="rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900 ring-1 ring-amber-200">
