@@ -5,6 +5,7 @@ import {
   type AnswerKey,
   type CategoryJudgment,
   type ShareReport,
+  authorSummaryMaxLength,
   checklistCards,
   dataLimitationNotice,
   encodeShareReport,
@@ -32,6 +33,9 @@ const memoPlaceholder =
 const memoTextClassName =
   "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
 const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
+const authorSummaryPlaceholder =
+  "이 종목을 종합적으로 어떻게 보고 있는지 적어보세요. 예: 강점은 있지만 밸류에이션 부담이 있어 추가 확인이 필요함";
+const authorSummaryEmptyText = "작성된 총평이 없습니다.";
 
 function StockBadge({ stock }: { stock: StockMetadata }) {
   return (
@@ -59,6 +63,7 @@ export default function Home() {
   const [selectedStock, setSelectedStock] = useState<StockMetadata | null>(null);
   const [answers, setAnswers] = useState<Record<string, AnswerKey>>({});
   const [memos, setMemos] = useState<Record<string, string>>({});
+  const [authorSummary, setAuthorSummary] = useState("");
   const [shareMessage, setShareMessage] = useState("");
   const [manualShareLink, setManualShareLink] = useState("");
 
@@ -112,6 +117,7 @@ export default function Home() {
       return memo ? { id: card.id, title: card.title, memo } : undefined;
     })
     .filter((memo): memo is NonNullable<typeof memo> => Boolean(memo));
+  const trimmedAuthorSummary = authorSummary.trim();
 
   function handleSelectStock(stock: StockMetadata) {
     setSelectedStock(stock);
@@ -157,6 +163,7 @@ export default function Home() {
       score,
       scoreLabel: result.label,
       interpretation: result.interpretation,
+      authorSummary: trimmedAuthorSummary,
       strongestAreas,
       weakestAreas,
       researchSuggestions: displayedResearchSuggestions,
@@ -398,6 +405,29 @@ export default function Home() {
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <div className="flex items-center justify-between gap-3">
+            <label htmlFor="authorSummary" className="text-xl font-bold text-slate-950">
+              작성자의 총평
+            </label>
+            <span className="text-xs font-medium text-slate-500">
+              {authorSummary.length}/{authorSummaryMaxLength}자
+            </span>
+          </div>
+          <textarea
+            id="authorSummary"
+            value={authorSummary}
+            maxLength={authorSummaryMaxLength}
+            onChange={(event) => setAuthorSummary(event.target.value)}
+            placeholder={authorSummaryPlaceholder}
+            rows={4}
+            className="mt-3 w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-slate-700 focus:ring-4 focus:ring-slate-200"
+          />
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            총평은 점수에 반영되지 않으며, 결과 리포트와 공유 리포트에 함께 표시됩니다.
+          </p>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-xl font-bold text-slate-950">자기 점검 리포트</h2>
 
           {isComplete && selectedStock ? (
@@ -450,6 +480,17 @@ export default function Home() {
                         : "현재 응답 기준으로 큰 약점은 적어 보입니다. 그래도 외부 자료로 다시 확인해보세요."}
                     </p>
                   </div>
+                </div>
+
+                <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 p-4">
+                  <h3 className="font-semibold text-slate-950">작성자의 총평</h3>
+                  {trimmedAuthorSummary ? (
+                    <p className={`mt-2 ${memoTextClassName}`}>{trimmedAuthorSummary}</p>
+                  ) : (
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {authorSummaryEmptyText}
+                    </p>
+                  )}
                 </div>
 
                 <div className="rounded-xl border border-slate-200 p-4">

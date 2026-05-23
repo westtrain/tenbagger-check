@@ -2,29 +2,44 @@
 
 ## Task Name
 
-Small mobile copy and layout polish.
+Add author summary to stock report.
 
 ## Purpose
 
-Improve the mobile first impression and result share button layout without changing core app logic.
+Add an optional author summary field so users can explain their overall view of the stock after completing the checklist.
+
+This makes the report more readable and more valuable when shared.
 
 ## Must Do
 
-1. Change the visible service name from "텐버거 체크" to "나만의 종목 분석" where it appears as product/service branding.
+1. Add an optional textarea for "작성자의 총평".
+2. The summary should not affect scoring.
+3. Limit the summary to 300 characters.
+4. Show character count, for example 120 / 300.
+5. Preserve user line breaks.
+6. Prevent long text or long URLs from overflowing the layout.
+7. Show the summary in the main result report.
+8. Include the summary in the shared report data.
+9. Show the summary on the share page.
+10. Place the summary before detailed evidence memos on the share page.
 
-2. Change the main hero headline to:
+## Copy
 
-혹시 이 종목, 텐버거 후보일까?
+Label:
 
-3. Change the hero description to:
+작성자의 총평
 
-시장 기회, 성장 증거, 밸류에이션 부담, 리스크까지 7가지 기준으로 차분히 점검하고 나만의 종목 판단 리포트를 만들어보세요.
+Placeholder:
 
-4. Change the share page title to:
+이 종목을 종합적으로 어떻게 보고 있는지 적어보세요. 예: 강점은 크지만 밸류에이션 부담이 있어 추가 확인이 필요함.
 
-나만의 종목 분석 공유 리포트
+Share page notice:
 
-5. Fix the mobile layout of the "공유 링크 만들기" button on the main result page so it feels centered or full-width on a 390px mobile viewport.
+아래 총평은 사용자가 직접 작성한 의견이며, 나만의 종목 분석이 검증하거나 추천하는 내용이 아닙니다.
+
+Empty state:
+
+작성된 총평이 없습니다.
 
 ## Must Preserve
 
@@ -32,7 +47,7 @@ Improve the mobile first impression and result share button layout without chang
 - Direct input fallback
 - 40-character custom stock name limit
 - Seven checklist cards
-- Scoring
+- Scoring logic
 - Evidence memos
 - 200-character memo limit
 - Share link generation
@@ -43,16 +58,18 @@ Improve the mobile first impression and result share button layout without chang
 
 ## Must Not Do
 
-- Do not add new features.
 - Do not change scoring logic.
-- Do not change share encode/decode logic.
 - Do not change stock search or direct input behavior.
 - Do not change required disclaimer text.
+- Do not add backend, database, API, authentication, payment, or new dependencies.
 
 ## Definition of Done
 
-- Mobile hero headline is shorter and clearer.
-- Service name appears as "나만의 종목 분석".
-- Share page title is updated.
-- Mobile share button alignment looks balanced.
-- Existing core flows still work.
+- Users can write an optional author summary.
+- The summary has a 300-character limit.
+- The summary does not affect score.
+- The result page displays the summary.
+- The share page displays the summary.
+- Shared report data includes the summary.
+- Existing share links still work.
+- Long summary text does not break layout.

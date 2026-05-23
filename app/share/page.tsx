@@ -12,6 +12,9 @@ const errorMessage =
 const memoTextClassName =
   "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
 const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
+const authorSummaryNotice =
+  "아래 총평은 사용자가 직접 작성한 의견이며, 나만의 종목 분석이 검증하거나 추천하는 내용이 아닙니다.";
+const authorSummaryEmptyText = "작성된 총평이 없습니다.";
 
 type SharePageProps = {
   searchParams: Promise<{
@@ -124,6 +127,22 @@ export default async function SharePage({ searchParams }: SharePageProps) {
                 : "현재 응답 기준으로 큰 약점은 적어 보입니다. 외부 자료 확인은 여전히 필요합니다."}
             </p>
           </div>
+        </section>
+
+        <section className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-xl font-bold text-slate-950">작성자의 총평</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-500">{authorSummaryNotice}</p>
+          {report.authorSummary.trim() ? (
+            <p
+              className={`mt-4 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200 ${memoTextClassName}`}
+            >
+              {report.authorSummary}
+            </p>
+          ) : (
+            <p className="mt-4 rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-600 ring-1 ring-slate-200">
+              {authorSummaryEmptyText}
+            </p>
+          )}
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">

@@ -39,6 +39,7 @@ export type ShareReport = {
   score: number;
   scoreLabel: string;
   interpretation: string;
+  authorSummary: string;
   strongestAreas: string[];
   weakestAreas: string[];
   researchSuggestions: string[];
@@ -48,6 +49,7 @@ export type ShareReport = {
 };
 
 export const memoMaxLength = 200;
+export const authorSummaryMaxLength = 300;
 
 export const investmentDisclaimer =
   "이 서비스는 투자 추천이 아닙니다. 제공되는 점수와 해석은 사용자의 자기 점검을 돕기 위한 참고 정보입니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.";
@@ -371,6 +373,10 @@ export function decodeShareReport(data: string): ShareReport | null {
       score: parsed.score,
       scoreLabel: parsed.scoreLabel,
       interpretation: parsed.interpretation,
+      authorSummary:
+        typeof parsed.authorSummary === "string"
+          ? parsed.authorSummary.slice(0, authorSummaryMaxLength)
+          : "",
       strongestAreas: parsed.strongestAreas,
       weakestAreas: parsed.weakestAreas,
       researchSuggestions: parsed.researchSuggestions,
