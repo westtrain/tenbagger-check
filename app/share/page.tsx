@@ -9,6 +9,9 @@ import {
 const errorMessage =
   "공유 리포트를 불러올 수 없습니다. 링크가 잘못되었거나 데이터가 손상되었을 수 있습니다.";
 
+const memoTextClassName =
+  "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
+
 type SharePageProps = {
   searchParams: Promise<{
     data?: string | string[];
@@ -57,7 +60,7 @@ export default async function SharePage({ searchParams }: SharePageProps) {
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8 text-slate-950 sm:px-6 lg:px-8">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <section className="min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
           <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_240px] lg:items-end">
             <div>
@@ -122,13 +125,14 @@ export default async function SharePage({ searchParams }: SharePageProps) {
             아래 내용은 작성자가 직접 남긴 메모이며, 자동 검증된 정보가 아닙니다.
           </p>
           {report.evidenceMemos.length > 0 ? (
-            <div className="mt-5 divide-y divide-slate-200">
+            <div className="mt-5 min-w-0 max-w-full divide-y divide-slate-200">
               {report.evidenceMemos.map((memo) => (
-                <div key={memo.id} className="min-w-0 py-4 first:pt-0 last:pb-0">
+                <div
+                  key={memo.id}
+                  className="min-w-0 max-w-full overflow-hidden py-4 first:pt-0 last:pb-0"
+                >
                   <p className="text-sm font-semibold text-slate-900">{memo.title}</p>
-                  <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]">
-                    {memo.memo}
-                  </p>
+                  <p className={`mt-2 ${memoTextClassName}`}>{memo.memo}</p>
                 </div>
               ))}
             </div>

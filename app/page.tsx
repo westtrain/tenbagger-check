@@ -24,6 +24,9 @@ const noDataNotices = [
 const memoPlaceholder =
   "이 항목에서 그렇게 판단한 이유를 간단히 적어보세요. 예: 최근 매출 성장, 신규 고객, 밸류에이션 부담, 주요 리스크 요인";
 
+const memoTextClassName =
+  "whitespace-pre-wrap break-words break-all text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]";
+
 function StockBadge({ stock }: { stock: StockMetadata }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -361,7 +364,7 @@ export default function Home() {
           <h2 className="text-xl font-bold text-slate-950">자기 점검 리포트</h2>
 
           {isComplete && selectedStock ? (
-            <div className="mt-5 grid gap-6 lg:grid-cols-[260px_1fr]">
+            <div className="mt-5 grid min-w-0 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
               <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                 <p className="text-sm font-semibold text-slate-500">검토 종목</p>
                 <p className="mt-2 text-xl font-bold text-slate-950">{selectedStock.name}</p>
@@ -384,8 +387,8 @@ export default function Home() {
                 </p>
               </aside>
 
-              <div className="space-y-5">
-                <div className="rounded-xl border border-slate-200 p-4">
+              <div className="min-w-0 space-y-5">
+                <div className="min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 p-4">
                   <h3 className="font-semibold text-slate-950">조심스러운 해석</h3>
                   <p className="mt-2 leading-7 text-slate-700">{result.interpretation}</p>
                 </div>
@@ -416,13 +419,14 @@ export default function Home() {
                     아래 메모는 사용자가 직접 작성한 내용입니다.
                   </p>
                   {writtenMemos.length > 0 ? (
-                    <div className="mt-3 space-y-3">
+                    <div className="mt-3 min-w-0 max-w-full space-y-3">
                       {writtenMemos.map(({ title, memo }) => (
-                        <div key={title} className="min-w-0 rounded-lg bg-slate-50 p-3">
+                        <div
+                          key={title}
+                          className="min-w-0 max-w-full overflow-hidden rounded-lg bg-slate-50 p-3"
+                        >
                           <p className="text-sm font-semibold text-slate-900">{title}</p>
-                          <p className="mt-1 whitespace-pre-wrap break-words text-sm leading-6 text-slate-600 [overflow-wrap:anywhere]">
-                            {memo}
-                          </p>
+                          <p className={`mt-1 ${memoTextClassName}`}>{memo}</p>
                         </div>
                       ))}
                     </div>
@@ -466,7 +470,8 @@ export default function Home() {
                       readOnly
                       value={manualShareLink}
                       rows={3}
-                      className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs leading-5 text-slate-700"
+                      wrap="soft"
+                      className="mt-3 w-full max-w-full overflow-x-hidden whitespace-pre-wrap break-all rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs leading-5 text-slate-700 [overflow-wrap:anywhere]"
                     />
                   ) : null}
                 </div>
