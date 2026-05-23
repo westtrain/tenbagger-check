@@ -6,11 +6,13 @@ import {
   type CategoryJudgment,
   type ShareReport,
   checklistCards,
+  dataLimitationNotice,
   encodeShareReport,
   getScoreResult,
   investmentDisclaimer,
   memoMaxLength,
 } from "./share-report";
+import { type StockMetadata, createCustomStock, searchStocks } from "./stocks";
 
 const noDataNotices = [
   "실시간 주가 데이터는 사용하지 않습니다.",
@@ -22,12 +24,35 @@ const noDataNotices = [
 const memoPlaceholder =
   "이 항목에서 그렇게 판단한 이유를 간단히 적어보세요. 예: 최근 매출 성장, 신규 고객, 밸류에이션 부담, 주요 리스크 요인";
 
+function StockBadge({ stock }: { stock: StockMetadata }) {
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">선택된 종목</p>
+      <p className="mt-2 text-lg font-bold text-slate-950">{stock.name}</p>
+      {!stock.isCustom ? (
+        <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+          <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">
+            {stock.ticker}
+          </span>
+          <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">
+            {stock.market}
+          </span>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function Home() {
-  const [stockName, setStockName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedStock, setSelectedStock] = useState<StockMetadata | null>(null);
   const [answers, setAnswers] = useState<Record<string, AnswerKey>>({});
   const [memos, setMemos] = useState<Record<string, string>>({});
   const [shareMessage, setShareMessage] = useState("");
   const [manualShareLink, setManualShareLink] = useState("");
+
+  const stockResults = useMemo(() => searchStocks(searchQuery), [searchQuery]);
+  const canUseCustomStock = searchQuery.trim().length > 0;
 
   const answeredCards = checklistCards
     .map((card) => {
@@ -43,8 +68,7 @@ export default function Home() {
     [answeredCards],
   );
 
-  const isComplete =
-    stockName.trim().length > 0 && answeredCards.length === checklistCards.length;
+  const isComplete = selectedStock !== null && answeredCards.length === checklistCards.length;
   const result = getScoreResult(score);
 
   const strongestAreas = answeredCards
@@ -63,7 +87,7 @@ export default function Home() {
     researchSuggestions.length > 0
       ? researchSuggestions
       : [
-          "추가로 재무제표, 산업 리포트, 실적 발표 자료, 경쟁사 비교를 확인해보세요.",
+          "재무제표, 산업 리포트, 실적 발표 자료, 경쟁사 비교를 통해 직접 작성한 판단을 다시 확인해보세요.",
         ];
 
   const writtenMemos = checklistCards
@@ -73,6 +97,21 @@ export default function Home() {
       return memo ? { id: card.id, title: card.title, memo } : undefined;
     })
     .filter((memo): memo is NonNullable<typeof memo> => Boolean(memo));
+
+  function handleSelectStock(stock: StockMetadata) {
+    setSelectedStock(stock);
+    setSearchQuery(`${stock.name} ${stock.ticker}`);
+  }
+
+  function handleUseCustomStock() {
+    if (!canUseCustomStock) {
+      return;
+    }
+
+    const customStock = createCustomStock(searchQuery);
+    setSelectedStock(customStock);
+    setSearchQuery(customStock.name);
+  }
 
   function buildShareReport(): ShareReport {
     const categoryJudgments: CategoryJudgment[] = checklistCards.map((card) => {
@@ -87,8 +126,11 @@ export default function Home() {
       };
     });
 
+    const stock = selectedStock ?? createCustomStock(searchQuery);
+
     return {
-      stockName: stockName.trim(),
+      stock,
+      stockName: stock.name,
       score,
       scoreLabel: result.label,
       interpretation: result.interpretation,
@@ -114,7 +156,7 @@ export default function Home() {
 
     try {
       await navigator.clipboard.writeText(shareLink);
-      setShareMessage("공유 링크가 복사되었습니다.");
+      setShareMessage("공유 링크가 클립보드에 복사되었습니다.");
     } catch {
       setManualShareLink(shareLink);
       setShareMessage("클립보드 복사에 실패했습니다. 아래 링크를 직접 복사해 주세요.");
@@ -126,30 +168,84 @@ export default function Home() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
         <header className="rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-sm sm:px-8">
           <p className="text-sm font-semibold text-slate-500">텐버거 체크</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
-            이 종목, 장기 성장 후보일까?
+          <h1 className="mt-3 max-w-4xl text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+            관심 종목을 감정적으로 판단하기 전에, 7가지 기준으로 먼저 점검해보세요.
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
-            관심 종목을 입력하고, 경험 많은 투자자들이 자주 확인하는 7가지 기준으로
-            성장 가능성과 리스크를 스스로 점검해보세요.
+            시장 기회, 성장 증거, 이익 레버리지, 경쟁 우위, 밸류에이션 부담, 촉매,
+            리스크를 차분히 확인하고 나만의 종목 판단 리포트를 만들어보세요.
           </p>
         </header>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <label htmlFor="stockName" className="text-base font-semibold text-slate-900">
-            관심 종목
-          </label>
-          <input
-            id="stockName"
-            type="text"
-            value={stockName}
-            onChange={(event) => setStockName(event.target.value)}
-            placeholder="예: 삼성전자, SK하이닉스, NVIDIA"
-            className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none transition focus:border-slate-700 focus:ring-4 focus:ring-slate-200"
-          />
-          <p className="mt-3 text-sm leading-6 text-slate-500">
-            실제 주가 데이터는 사용하지 않으며, 입력한 종목명은 결과 제목에만 사용됩니다.
-          </p>
+          <div className="grid gap-5 lg:grid-cols-[1fr_280px]">
+            <div>
+              <label htmlFor="stockSearch" className="text-base font-semibold text-slate-900">
+                관심 종목 검색
+              </label>
+              <input
+                id="stockSearch"
+                type="text"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setSelectedStock(null);
+                }}
+                placeholder="예: 삼성전자, 005930, NASDAQ, 엔비디아"
+                className="mt-3 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base outline-none transition focus:border-slate-700 focus:ring-4 focus:ring-slate-200"
+              />
+              <p className="mt-3 text-sm leading-6 text-slate-500">
+                종목명, 티커, 시장, 별칭으로 검색할 수 있습니다. 목록에 없으면 직접 입력으로
+                계속할 수 있습니다.
+              </p>
+
+              {searchQuery.trim() ? (
+                <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
+                  {stockResults.length > 0 ? (
+                    stockResults.map((stock) => (
+                      <button
+                        key={stock.id}
+                        type="button"
+                        onClick={() => handleSelectStock(stock)}
+                        className="flex w-full items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 text-left transition last:border-b-0 hover:bg-slate-50"
+                      >
+                        <span>
+                          <span className="block font-semibold text-slate-950">{stock.name}</span>
+                          <span className="text-sm text-slate-500">
+                            {stock.ticker} · {stock.market}
+                          </span>
+                        </span>
+                        <span className="text-sm font-semibold text-slate-600">선택</span>
+                      </button>
+                    ))
+                  ) : (
+                    <div className="bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
+                      일치하는 로컬 종목이 없습니다.
+                    </div>
+                  )}
+                </div>
+              ) : null}
+
+              {canUseCustomStock ? (
+                <button
+                  type="button"
+                  onClick={handleUseCustomStock}
+                  className="mt-3 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50"
+                >
+                  &quot;{searchQuery.trim()}&quot; 직접 입력으로 계속
+                </button>
+              ) : null}
+            </div>
+
+            {selectedStock ? (
+              <StockBadge stock={selectedStock} />
+            ) : (
+              <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm leading-6 text-slate-500">
+                검색 결과에서 종목을 선택하거나 직접 입력을 선택하면 여기에 종목 정보가
+                표시됩니다.
+              </div>
+            )}
+          </div>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
@@ -157,9 +253,9 @@ export default function Home() {
             7가지 성장 후보 자기 점검 프레임워크
           </h2>
           <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
-            장기 성장 후보는 단순히 인기가 있는 테마에 속해 있다고 만들어지지 않습니다.
-            시장 기회, 실제 성장 증거, 이익 확장성, 경쟁 우위, 적정한 진입 리스크,
-            촉매, 그리고 반증 조건을 함께 살펴봐야 합니다.
+            장기 성장 후보는 단순히 인기 있는 테마에 속해 있다고 만들어지지 않습니다. 시장
+            기회, 실제 성장 증거, 이익 구조, 경쟁 우위, 진입 리스크, 촉매, 반증 조건을 함께
+            살펴봐야 합니다.
           </p>
         </section>
 
@@ -185,7 +281,7 @@ export default function Home() {
                 <div className="mt-5 grid gap-4 lg:grid-cols-2">
                   <div className="rounded-xl bg-slate-50 p-4 ring-1 ring-slate-200">
                     <h4 className="text-sm font-semibold text-slate-900">
-                      고수들이 보는 포인트
+                      점검할 핵심 관점
                     </h4>
                     <p className="mt-2 text-sm leading-6 text-slate-600">{card.expertPoint}</p>
                   </div>
@@ -262,23 +358,37 @@ export default function Home() {
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-950">자기 점검 결과</h2>
+          <h2 className="text-xl font-bold text-slate-950">자기 점검 리포트</h2>
 
-          {isComplete ? (
-            <div className="mt-5 grid gap-6 lg:grid-cols-[240px_1fr]">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="text-sm font-semibold text-slate-500">{stockName.trim()}</p>
-                <p className="mt-3 text-5xl font-bold tracking-tight text-slate-950">
+          {isComplete && selectedStock ? (
+            <div className="mt-5 grid gap-6 lg:grid-cols-[260px_1fr]">
+              <aside className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <p className="text-sm font-semibold text-slate-500">검토 종목</p>
+                <p className="mt-2 text-xl font-bold text-slate-950">{selectedStock.name}</p>
+                {!selectedStock.isCustom ? (
+                  <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                    <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">
+                      {selectedStock.ticker}
+                    </span>
+                    <span className="rounded-full bg-white px-2.5 py-1 ring-1 ring-slate-200">
+                      {selectedStock.market}
+                    </span>
+                  </div>
+                ) : null}
+                <p className="mt-6 text-5xl font-bold tracking-tight text-slate-950">
                   {score}
                   <span className="text-xl font-semibold text-slate-500">/100</span>
                 </p>
                 <p className="mt-3 inline-flex rounded-full bg-white px-3 py-1 text-sm font-semibold text-slate-800 ring-1 ring-slate-200">
                   {result.label}
                 </p>
-              </div>
+              </aside>
 
               <div className="space-y-5">
-                <p className="leading-7 text-slate-700">{result.interpretation}</p>
+                <div className="rounded-xl border border-slate-200 p-4">
+                  <h3 className="font-semibold text-slate-950">조심스러운 해석</h3>
+                  <p className="mt-2 leading-7 text-slate-700">{result.interpretation}</p>
+                </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="rounded-xl border border-slate-200 p-4">
@@ -291,32 +401,19 @@ export default function Home() {
                   </div>
 
                   <div className="rounded-xl border border-slate-200 p-4">
-                    <h3 className="font-semibold text-slate-950">추가 확인 필요</h3>
+                    <h3 className="font-semibold text-slate-950">추가 확인 필요 영역</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
                       {weakestAreas.length > 0
                         ? weakestAreas.join(" / ")
-                        : "현재 응답 기준으로 큰 약점은 적어 보입니다. 그래도 외부 자료로 사실을 확인해보세요."}
+                        : "현재 응답 기준으로 큰 약점은 적어 보입니다. 그래도 외부 자료로 다시 확인해보세요."}
                     </p>
                   </div>
                 </div>
 
                 <div className="rounded-xl border border-slate-200 p-4">
-                  <h3 className="font-semibold text-slate-950">추가 조사 제안</h3>
-                  <ul className="mt-2 space-y-2 text-sm leading-6 text-slate-600">
-                    {displayedResearchSuggestions.map((suggestion) => (
-                      <li key={suggestion} className="flex gap-2">
-                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
-                        <span>{suggestion}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="rounded-xl border border-slate-200 p-4">
-                  <h3 className="font-semibold text-slate-950">작성자의 판단 근거</h3>
+                  <h3 className="font-semibold text-slate-950">판단 근거 메모</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-500">
-                    아래 메모는 사용자가 직접 작성한 내용이며, 텐버거 체크가 검증하거나
-                    추천하는 내용이 아닙니다.
+                    아래 메모는 사용자가 직접 작성한 내용입니다.
                   </p>
                   {writtenMemos.length > 0 ? (
                     <div className="mt-3 space-y-3">
@@ -336,14 +433,23 @@ export default function Home() {
                   )}
                 </div>
 
+                <div className="rounded-xl border border-slate-200 p-4">
+                  <h3 className="font-semibold text-slate-950">추가 조사 제안</h3>
+                  <ul className="mt-2 space-y-2 text-sm leading-6 text-slate-600">
+                    {displayedResearchSuggestions.map((suggestion) => (
+                      <li key={suggestion} className="flex gap-2">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
+                        <span>{suggestion}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <h3 className="font-semibold text-slate-950">공유 리포트</h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">
-                    공유 링크에는 작성한 판단 근거 메모가 함께 포함됩니다.
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-slate-600">
-                    개인정보, 민감한 정보, 타인에게 매수·매도를 권유하는 표현은 메모에
-                    적지 않는 것이 좋습니다.
+                    공유 링크에는 선택한 종목 정보, 점수, 체크리스트 결과, 작성한 메모가
+                    포함됩니다.
                   </p>
                   <button
                     type="button"
@@ -365,14 +471,19 @@ export default function Home() {
                   ) : null}
                 </div>
 
-                <p className="rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900 ring-1 ring-amber-200">
-                  {investmentDisclaimer}
-                </p>
+                <div className="space-y-3">
+                  <p className="rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900 ring-1 ring-amber-200">
+                    {dataLimitationNotice}
+                  </p>
+                  <p className="rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900 ring-1 ring-amber-200">
+                    {investmentDisclaimer}
+                  </p>
+                </div>
               </div>
             </div>
           ) : (
             <p className="mt-4 rounded-xl bg-slate-50 p-5 text-sm leading-6 text-slate-600 ring-1 ring-slate-200">
-              종목명을 입력하고 7가지 기준을 모두 평가하면 결과가 표시됩니다.
+              종목을 선택하거나 직접 입력하고 7가지 기준을 모두 평가하면 리포트가 표시됩니다.
             </p>
           )}
         </section>
@@ -380,7 +491,7 @@ export default function Home() {
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-lg font-bold text-slate-950">중요 안내</h2>
           <p className="mt-3 text-sm leading-6 text-slate-600">{investmentDisclaimer}</p>
-          <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-600 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-600 sm:grid-cols-2 lg:grid-cols-4">
             {noDataNotices.map((notice) => (
               <li key={notice} className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
                 {notice}

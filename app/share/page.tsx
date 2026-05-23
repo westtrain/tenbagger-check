@@ -1,12 +1,13 @@
 import Link from "next/link";
 import {
+  dataLimitationNotice,
   decodeShareReport,
   investmentDisclaimer,
   shareSpecificDisclaimer,
 } from "../share-report";
 
 const errorMessage =
-  "공유 리포트를 불러올 수 없습니다. 링크가 잘못되었거나 손상되었을 수 있습니다.";
+  "공유 리포트를 불러올 수 없습니다. 링크가 잘못되었거나 데이터가 손상되었을 수 있습니다.";
 
 type SharePageProps = {
   searchParams: Promise<{
@@ -35,7 +36,9 @@ export default async function SharePage({ searchParams }: SharePageProps) {
       <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-950 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
-          <h1 className="mt-3 text-2xl font-bold text-slate-950">리포트를 열 수 없습니다</h1>
+          <h1 className="mt-3 text-2xl font-bold text-slate-950">
+            리포트를 열 수 없습니다
+          </h1>
           <p className="mt-4 text-sm leading-6 text-slate-600">{errorMessage}</p>
           <div className="mt-6">
             <CtaButton />
@@ -56,19 +59,31 @@ export default async function SharePage({ searchParams }: SharePageProps) {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           <p className="text-sm font-semibold text-slate-500">텐버거 체크 공유 리포트</p>
-          <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_220px] lg:items-end">
+          <div className="mt-5 grid gap-5 lg:grid-cols-[1fr_240px] lg:items-end">
             <div>
               <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
-                {report.stockName}
+                {report.stock.name}
               </h1>
+              {!report.stock.isCustom ? (
+                <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
+                  <span className="rounded-full bg-slate-50 px-2.5 py-1 ring-1 ring-slate-200">
+                    {report.stock.ticker}
+                  </span>
+                  <span className="rounded-full bg-slate-50 px-2.5 py-1 ring-1 ring-slate-200">
+                    {report.stock.market}
+                  </span>
+                </div>
+              ) : null}
               <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-                이 리포트는 사용자가 직접 선택하고 작성한 자기 점검 결과입니다. 투자
-                추천이 아닙니다.
+                이 리포트는 작성자가 직접 선택하고 작성한 자기 점검 요약입니다.
               </p>
-              <p className="mt-3 text-xs font-medium text-slate-500">생성일: {formattedDate}</p>
+              <p className="mt-3 text-xs font-medium text-slate-500">생성일 {formattedDate}</p>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-              <p className="text-5xl font-bold tracking-tight text-slate-950">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                점검 점수
+              </p>
+              <p className="mt-2 text-5xl font-bold tracking-tight text-slate-950">
                 {report.score}
                 <span className="text-xl font-semibold text-slate-500">/100</span>
               </p>
@@ -84,7 +99,7 @@ export default async function SharePage({ searchParams }: SharePageProps) {
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="font-bold text-slate-950">강점 영역</h2>
+            <h2 className="font-bold text-slate-950">한눈에 보는 강점</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
               {report.strongestAreas.length > 0
                 ? report.strongestAreas.join(" / ")
@@ -96,16 +111,15 @@ export default async function SharePage({ searchParams }: SharePageProps) {
             <p className="mt-2 text-sm leading-6 text-slate-600">
               {report.weakestAreas.length > 0
                 ? report.weakestAreas.join(" / ")
-                : "현재 응답 기준으로 큰 약점은 적어 보입니다. 그래도 외부 자료 확인이 필요합니다."}
+                : "현재 응답 기준으로 큰 약점은 적어 보입니다. 외부 자료 확인은 여전히 필요합니다."}
             </p>
           </div>
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <h2 className="text-xl font-bold text-slate-950">작성자의 판단 근거</h2>
+          <h2 className="text-xl font-bold text-slate-950">작성자의 판단 근거 메모</h2>
           <p className="mt-2 text-sm leading-6 text-slate-500">
-            아래 내용은 사용자가 직접 작성한 메모이며, 텐버거 체크가 검증하거나
-            추천하는 내용이 아닙니다.
+            아래 내용은 작성자가 직접 남긴 메모이며, 자동 검증된 정보가 아닙니다.
           </p>
           {report.evidenceMemos.length > 0 ? (
             <div className="mt-5 divide-y divide-slate-200">
@@ -156,8 +170,9 @@ export default async function SharePage({ searchParams }: SharePageProps) {
         </section>
 
         <section className="rounded-2xl border border-amber-200 bg-amber-50 p-6 shadow-sm sm:p-8">
-          <h2 className="text-lg font-bold text-amber-950">투자 관련 고지</h2>
+          <h2 className="text-lg font-bold text-amber-950">한계 및 고지</h2>
           <div className="mt-3 space-y-3 text-sm leading-6 text-amber-900">
+            <p>{dataLimitationNotice}</p>
             <p>{investmentDisclaimer}</p>
             <p>{shareSpecificDisclaimer}</p>
           </div>
@@ -166,7 +181,7 @@ export default async function SharePage({ searchParams }: SharePageProps) {
         <section className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
           <h2 className="text-xl font-bold text-slate-950">내 관심 종목도 점검해보기</h2>
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            같은 7가지 기준으로 직접 판단을 남기고, 교육용 자기 점검 리포트를 만들어볼 수
+            같은 7가지 기준으로 직접 판단을 남기고 교육용 자기 점검 리포트를 만들어볼 수
             있습니다.
           </p>
           <div className="mt-5">
