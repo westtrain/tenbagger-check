@@ -237,3 +237,176 @@ Codex에게 금지할 것:
 3. 결과 공유용 요약 텍스트 만들기
 
 이 세 가지 중 하나를 선택하는 것이 좋다.
+
+---
+
+## Latest MVP Update
+
+### Product Name Update
+
+The product name was changed from "Tenbagger Check" / "텐버거 체크" to:
+
+**나만의 종목 분석**
+
+The updated positioning is:
+
+- A personal stock analysis report tool
+- A self-check tool for reviewing stock ideas
+- A shareable reasoning report generator
+
+The main hero headline is now:
+
+**혹시 이 종목, 텐버거 후보일까?**
+
+The hero description is:
+
+**시장 기회, 성장 증거, 밸류에이션 부담, 리스크까지 7가지 기준으로 차분히 평가하고 나만의 종목 판단 리포트를 만들어보세요.**
+
+---
+
+### Stock Search and Direct Input
+
+The app now supports local stock search and selection.
+
+Implemented behavior:
+
+- Search by stock name
+- Search by ticker
+- Search by alias
+- Search by market
+- Show stock name, ticker, and market in search results
+- Store selected stock as structured metadata
+- Allow direct input fallback when no stock is found
+- Limit custom stock names to 40 characters
+- Prevent empty or whitespace-only custom stock names
+- Hide ticker and market metadata for custom direct-input stocks
+
+The current implementation uses local static stock data.
+
+Future extension:
+
+- Replace local stock data with a real stock search API
+- Add more markets
+- Add ETF support
+- Add cached stock search data
+
+---
+
+### Evidence Memo Improvements
+
+Each checklist category includes an evidence memo field.
+
+Current behavior:
+
+- Memo is optional
+- Memo does not affect score
+- Memo has a 200-character limit
+- Memo is shown in the result report
+- Memo is included in the shared report
+- Long URLs and long unbroken strings are forced to wrap
+- User-entered line breaks are preserved
+
+A key UI bug was fixed:
+
+- Long memo text could overflow outside report cards.
+- The root cause was not only missing text wrapping, but also CSS grid min-width behavior.
+- The fix included minmax(0, 1fr), min-w-0, max-w-full, overflow-hidden, break-all, and overflow-wrap:anywhere.
+
+---
+
+### URL-Based Share Report
+
+The app now supports URL-based shared reports.
+
+Current behavior:
+
+- The user completes a report.
+- The user clicks "공유 링크 만들기".
+- The report is encoded into a URL-safe share payload.
+- The shared page renders the report from /share?data=...
+- The shared page includes a CTA back to /.
+- The shared page explains that the report is user-generated and not investment advice.
+
+The share data includes:
+
+- Stock metadata
+- Score
+- Score label
+- Score interpretation
+- Strongest areas
+- Weakest areas
+- Research suggestions
+- Category judgments
+- User evidence memos
+- Created date
+
+Encoding update:
+
+- New share links use a v2. prefix with URL-safe base64 payloads.
+- Legacy encodeURIComponent(JSON.stringify(...)) links are still supported for backward compatibility.
+- This reduces risk from query parameter decoding/re-encoding across browsers or messaging apps.
+
+---
+
+### Viral Loop Flow
+
+The core viral loop is:
+
+1. User creates a report.
+2. User shares the report link.
+3. Viewer opens the shared report.
+4. Viewer clicks "나도 내 관심 종목 체크하기".
+5. Viewer creates their own report.
+6. Viewer shares a new report link.
+
+This flow has been tested and stabilized.
+
+Important fixes:
+
+- Shared page CTA returns to /.
+- New reports created after entering from a shared page work normally.
+- Custom stock name limits still apply after CTA re-entry.
+- Memo wrapping still works after CTA re-entry.
+- New shared links work after CTA re-entry.
+
+---
+
+### Current Development Workflow
+
+To reduce Codex usage:
+
+- Codex should read only AGENTS.md and docs/07-current-task.md for most tasks.
+- Codex should not run npm run lint, npm run build, or npm run dev unless explicitly asked.
+- Codex should not run git commit or git push.
+- The user runs lint/build/dev/git commands manually.
+- Codex should focus on minimal code changes and concise change summaries.
+
+---
+
+### Current MVP Status
+
+The current MVP includes:
+
+- Product name and mobile hero copy polish
+- Local stock search and selection
+- Direct input fallback
+- 40-character direct input name limit
+- Seven-category self-check framework
+- Evidence memo fields
+- 200-character memo limit
+- Weighted 100-point score
+- Strength and weak-area summary
+- Suggested next research points
+- URL-based share report
+- User memo sharing
+- Shared report CTA
+- Invalid share link friendly error
+- Required investment disclaimers
+
+The next recommended steps are:
+
+1. Manual mobile UX review
+2. README and documentation cleanup
+3. Pre-launch checklist
+4. Vercel deployment preparation
+5. Open Graph metadata planning
