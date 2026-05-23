@@ -332,12 +332,12 @@ function isStockMetadata(value: unknown): value is StockMetadata {
   );
 }
 
-export function decodeShareReport(data: string): ShareReport | null {
-  const parsed = parseShareReportData(data);
-
-  if (!parsed) {
+export function normalizeShareReport(value: unknown): ShareReport | null {
+  if (!value || typeof value !== "object") {
     return null;
   }
+
+  const parsed = value as Partial<ShareReport>;
 
   try {
     const legacyStockName = typeof parsed.stockName === "string" ? parsed.stockName : "";
@@ -387,4 +387,8 @@ export function decodeShareReport(data: string): ShareReport | null {
   } catch {
     return null;
   }
+}
+
+export function decodeShareReport(data: string): ShareReport | null {
+  return normalizeShareReport(parseShareReportData(data));
 }

@@ -8,7 +8,6 @@ import {
   authorSummaryMaxLength,
   checklistCards,
   dataLimitationNotice,
-  encodeShareReport,
   getScoreResult,
   investmentDisclaimer,
   memoMaxLength,
@@ -178,18 +177,39 @@ export default function Home() {
       return;
     }
 
-    const encodedData = encodeShareReport(buildShareReport());
-    const shareLink = `${window.location.origin}/share?data=${encodedData}`;
-
     setManualShareLink("");
     setShareMessage("");
 
     try {
-      await navigator.clipboard.writeText(shareLink);
-      setShareMessage("공유 링크가 클립보드에 복사되었습니다.");
+      const response = await fetch("/api/share-reports", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(buildShareReport()),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create share report.");
+      }
+
+      const responseData = (await response.json()) as { id?: unknown };
+
+      if (typeof responseData.id !== "string") {
+        throw new Error("Invalid share report response.");
+      }
+
+      const shareLink = `${window.location.origin}/r/${responseData.id}`;
+
+      try {
+        await navigator.clipboard.writeText(shareLink);
+        setShareMessage("공유 링크가 클립보드에 복사되었습니다.");
+      } catch {
+        setManualShareLink(shareLink);
+        setShareMessage("클립보드 복사에 실패했습니다. 아래 링크를 직접 복사해 주세요.");
+      }
     } catch {
-      setManualShareLink(shareLink);
-      setShareMessage("클립보드 복사에 실패했습니다. 아래 링크를 직접 복사해 주세요.");
+      setShareMessage("공유 링크 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     }
   }
 

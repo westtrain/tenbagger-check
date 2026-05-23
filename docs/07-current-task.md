@@ -2,44 +2,55 @@
 
 ## Task Name
 
-Add author summary to stock report.
+Add short share links with Supabase stored reports.
 
 ## Purpose
 
-Add an optional author summary field so users can explain their overall view of the stock after completing the checklist.
+The current URL-based share link is too long because the full report data is stored in the query string.
 
-This makes the report more readable and more valuable when shared.
+This causes sharing problems in apps such as KakaoTalk.
+
+The goal is to store share reports in Supabase and generate short share links.
+
+Old format:
+
+/share?data=...
+
+New format:
+
+/r/[id]
+
+Example:
+
+/r/a8f3k2
 
 ## Must Do
 
-1. Add an optional textarea for "작성자의 총평".
-2. The summary should not affect scoring.
-3. Limit the summary to 300 characters.
-4. Show character count, for example 120 / 300.
-5. Preserve user line breaks.
-6. Prevent long text or long URLs from overflowing the layout.
-7. Show the summary in the main result report.
-8. Include the summary in the shared report data.
-9. Show the summary on the share page.
-10. Place the summary before detailed evidence memos on the share page.
+1. Add Supabase client setup for the app.
+2. Add an API route to create a stored share report.
+3. When the user clicks "공유 링크 만들기", save the current share report data to Supabase.
+4. Generate a short random id for the report.
+5. Copy a short link using the new route:
+   /r/[id]
+6. Add a new share report page route:
+   /r/[id]
+7. The /r/[id] page should load the report data from Supabase and render the same share report UI.
+8. Keep the existing /share?data=... route as legacy fallback.
+9. If the report id is missing or not found, show a friendly error page.
+10. Do not store user name, email, IP address, or login information.
+11. Do not require login.
 
-## Copy
+## Data Model
 
-Label:
+Supabase table:
 
-작성자의 총평
+share_reports
 
-Placeholder:
+Fields:
 
-이 종목을 종합적으로 어떻게 보고 있는지 적어보세요. 예: 강점은 크지만 밸류에이션 부담이 있어 추가 확인이 필요함.
-
-Share page notice:
-
-아래 총평은 사용자가 직접 작성한 의견이며, 나만의 종목 분석이 검증하거나 추천하는 내용이 아닙니다.
-
-Empty state:
-
-작성된 총평이 없습니다.
+- id: text primary key
+- data: jsonb not null
+- created_at: timestamptz default now()
 
 ## Must Preserve
 
@@ -50,8 +61,9 @@ Empty state:
 - Scoring logic
 - Evidence memos
 - 200-character memo limit
-- Share link generation
-- Share report decoding
+- Author summary
+- 300-character author summary limit
+- Existing /share?data=... legacy share page
 - Invalid share link error handling
 - Required investment disclaimer
 - Share-specific disclaimer
@@ -61,15 +73,25 @@ Empty state:
 - Do not change scoring logic.
 - Do not change stock search or direct input behavior.
 - Do not change required disclaimer text.
-- Do not add backend, database, API, authentication, payment, or new dependencies.
+- Do not add authentication.
+- Do not add payment.
+- Do not add user accounts.
+- Do not store personal identifiers.
+
+## Environment Variables
+
+Use:
+
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+Do not hardcode keys.
 
 ## Definition of Done
 
-- Users can write an optional author summary.
-- The summary has a 300-character limit.
-- The summary does not affect score.
-- The result page displays the summary.
-- The share page displays the summary.
-- Shared report data includes the summary.
-- Existing share links still work.
-- Long summary text does not break layout.
+- Clicking "공유 링크 만들기" creates a short /r/[id] link.
+- The copied link is short enough to work in KakaoTalk.
+- /r/[id] loads the stored report and displays the share page.
+- /share?data=... still works for legacy links.
+- Not found report ids show a friendly error.
+- Existing report UI and share page UI remain consistent.
