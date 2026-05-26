@@ -2,46 +2,38 @@
 
 ## Task Name
 
-No active implementation task.
+Add Vercel Web Analytics.
 
-## Current Status
+## Purpose
 
-The current MVP is deployed and the core viral sharing loop is working.
+Enable basic traffic tracking after deployment.
 
-Recently completed:
+The goal is to check whether users visit:
 
-- Short `/r/[id]` share links using Supabase stored reports
-- Legacy `/share?data=...` support
-- Dynamic Open Graph metadata
-- Dynamic OG image for shared reports
-- Twitter card metadata
-- KakaoTalk, X, and Threads share preview validation
+- Main page
+- Shared report pages
+- Short share links
 
-## Next Recommended Work
+## Must Do
 
-Do not add new features immediately.
+1. Add Vercel Web Analytics to the Next.js App Router project.
+2. Install the required package if it is not already installed.
+3. Add the Analytics component to the root layout.
+4. Do not add custom event tracking yet.
+5. Do not add third-party analytics tools.
+6. Do not add cookies or user tracking.
+7. Do not change app UI or app behavior.
 
-Recommended next steps:
+## Must Preserve
 
-1. Observe real sharing behavior.
-2. Collect feedback from early users.
-3. Review share report readability.
-4. Consider advanced multibagger filter only after validating usage.
-5. Monitor Supabase usage and stored report volume.
+- Existing app routes
+- Existing share links
+- Existing OG image and metadata
+- Existing scoring and report logic
 
-## Codex Usage Rule
+## Definition of Done
 
-Do not ask Codex to implement anything unless a specific issue or task is clearly defined.
-
-For most future tasks, Codex should read only:
-
-- AGENTS.md
-- docs/07-current-task.md
-
-## Must Not Do Without Explicit User Request
-
-- Do not add new features.
-- Do not change scoring logic.
-- Do not change share save/load behavior.
-- Do not change required disclaimer text.
-- Do not add authentication, payment, or user accounts.
+- Vercel Web Analytics package is installed.
+- Analytics component is mounted globally.
+- The app builds successfully.
+- After deployment, Vercel Analytics should start showing page visits.
