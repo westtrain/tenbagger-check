@@ -410,3 +410,43 @@ The next recommended steps are:
 3. Pre-launch checklist
 4. Vercel deployment preparation
 5. Open Graph metadata planning
+
+---
+
+## Short Share Links and Share Preview Update
+
+The app now supports short share links using Supabase stored reports.
+
+Previous share format:
+
+/share?data=...
+
+New share format:
+
+/r/[id]
+
+This change was added because long URL-based share links could fail to become clickable in KakaoTalk.
+
+Current behavior:
+
+- Report data is stored in the Supabase `share_reports` table.
+- The app generates a short `/r/[id]` share link.
+- `/r/[id]` loads the stored report and renders the shared report page.
+- Existing `/share?data=...` legacy links are still supported.
+- Missing or invalid report ids show a friendly error page.
+
+Share preview support was also added:
+
+- `/r/[id]` generates dynamic metadata.
+- Open Graph metadata is generated from stored report data.
+- Twitter card metadata is generated from stored report data.
+- Dynamic OG image is generated for shared reports.
+- The preview image shows service name, stock name, ticker/market when available, score, and score label.
+
+Manual platform testing confirmed that previews appear correctly on:
+
+- X
+- Threads
+- KakaoTalk
+
+This completes the core viral sharing loop for the MVP.
