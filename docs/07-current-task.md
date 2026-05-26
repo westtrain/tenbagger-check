@@ -2,96 +2,100 @@
 
 ## Task Name
 
-Add short share links with Supabase stored reports.
+Add share preview metadata and dynamic OG image.
 
 ## Purpose
 
-The current URL-based share link is too long because the full report data is stored in the query string.
+Short share links now work with `/r/[id]`.
 
-This causes sharing problems in apps such as KakaoTalk.
+The next goal is to make shared links more attractive on KakaoTalk, X, Threads, and other platforms by showing a meaningful preview.
 
-The goal is to store share reports in Supabase and generate short share links.
-
-Old format:
-
-/share?data=...
-
-New format:
-
-/r/[id]
-
-Example:
-
-/r/a8f3k2
+The preview should help users understand what is inside the link before clicking.
 
 ## Must Do
 
-1. Add Supabase client setup for the app.
-2. Add an API route to create a stored share report.
-3. When the user clicks "공유 링크 만들기", save the current share report data to Supabase.
-4. Generate a short random id for the report.
-5. Copy a short link using the new route:
-   /r/[id]
-6. Add a new share report page route:
-   /r/[id]
-7. The /r/[id] page should load the report data from Supabase and render the same share report UI.
-8. Keep the existing /share?data=... route as legacy fallback.
-9. If the report id is missing or not found, show a friendly error page.
-10. Do not store user name, email, IP address, or login information.
-11. Do not require login.
+1. Add dynamic metadata for `/r/[id]`.
+2. Metadata should use stored report data from Supabase.
+3. Metadata title should include stock name.
+4. Metadata description should include score and score label.
+5. Add Open Graph metadata.
+6. Add Twitter card metadata.
+7. Add a dynamic OG image route for shared reports.
+8. The OG image should show:
+   - Service name: 나만의 종목 분석
+   - Stock name
+   - Ticker and market if available
+   - Score
+   - Score label
+9. Use a safe fallback preview if report data cannot be loaded.
+10. Keep `/share?data=...` legacy route working.
+11. Do not change report creation or scoring logic.
 
-## Data Model
+## Suggested Preview Copy
 
-Supabase table:
+For `/r/[id]`:
 
-share_reports
+Title:
 
-Fields:
+`{stockName} 종목 분석 리포트`
 
-- id: text primary key
-- data: jsonb not null
-- created_at: timestamptz default now()
+Description:
+
+`{score}점 · {scoreLabel} | 나만의 종목 분석에서 작성된 자기 점검 리포트입니다.`
+
+Fallback title:
+
+`나만의 종목 분석 공유 리포트`
+
+Fallback description:
+
+`7가지 기준으로 작성한 종목 판단 리포트입니다.`
+
+## Suggested OG Image Layout
+
+Image size:
+
+- 1200 x 630
+
+Content:
+
+- Top: 나만의 종목 분석
+- Main: stock name
+- Sub: ticker · market
+- Score: 85점
+- Label: 강한 검토 후보
+- Footer: 혹시 이 종목, 텐버거 후보일까?
 
 ## Must Preserve
 
-- Stock search and selection
-- Direct input fallback
-- 40-character custom stock name limit
-- Seven checklist cards
-- Scoring logic
-- Evidence memos
-- 200-character memo limit
+- `/r/[id]` short link behavior
+- Supabase report loading
+- Existing share report UI
+- Existing `/share?data=...` legacy route
+- Score calculation
+- Stock search and direct input behavior
 - Author summary
-- 300-character author summary limit
-- Existing /share?data=... legacy share page
-- Invalid share link error handling
-- Required investment disclaimer
-- Share-specific disclaimer
+- Evidence memos
+- Required disclaimer text
+- Share-specific disclaimer text
 
 ## Must Not Do
 
 - Do not change scoring logic.
+- Do not change report save/load behavior unless needed for metadata.
 - Do not change stock search or direct input behavior.
-- Do not change required disclaimer text.
 - Do not add authentication.
 - Do not add payment.
-- Do not add user accounts.
 - Do not store personal identifiers.
-
-## Environment Variables
-
-Use:
-
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-Do not hardcode keys.
+- Do not add new dependencies unless absolutely necessary.
 
 ## Definition of Done
 
-- Clicking "공유 링크 만들기" creates a short /r/[id] link.
-- The copied link is short enough to work in KakaoTalk.
-- /r/[id] loads the stored report and displays the share page.
-- /share?data=... still works for legacy links.
-- Not found report ids show a friendly error.
-- Existing report UI and share page UI remain consistent.
+- `/r/[id]` has dynamic title and description metadata.
+- `/r/[id]` has Open Graph metadata.
+- `/r/[id]` has Twitter card metadata.
+- Shared preview includes stock name, score, and score label.
+- A dynamic OG image is generated for `/r/[id]`.
+- Missing or invalid report ids use fallback metadata.
+- Existing short share links still open normally.
+- Existing legacy share links still open normally.
