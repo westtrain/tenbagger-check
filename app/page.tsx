@@ -35,6 +35,9 @@ const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
 const authorSummaryPlaceholder =
   "이 종목을 종합적으로 어떻게 보고 있는지 적어보세요. 예: 강점은 있지만 밸류에이션 부담이 있어 추가 확인이 필요함";
 const authorSummaryEmptyText = "작성된 총평이 없습니다.";
+const feedbackUrl = "https://forms.gle/MavbYnwLNidVtzQF9";
+const feedbackCopy =
+  "서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.";
 
 function StockBadge({ stock }: { stock: StockMetadata }) {
   return (
@@ -603,6 +606,18 @@ export default function Home() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-500 shadow-sm sm:p-6">
+          <p>{feedbackCopy}</p>
+          <a
+            href={feedbackUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-2 inline-flex font-semibold text-slate-700 underline underline-offset-4 transition hover:text-slate-950"
+          >
+            의견 보내기
+          </a>
         </section>
       </div>
     </main>

@@ -16,6 +16,9 @@ const stockNameTextClassName = "break-words break-all [overflow-wrap:anywhere]";
 const authorSummaryNotice =
   "아래 총평은 사용자가 직접 작성한 의견이며, 나만의 종목 분석이 검증하거나 추천하는 내용이 아닙니다.";
 const authorSummaryEmptyText = "작성된 총평이 없습니다.";
+const feedbackUrl = "https://forms.gle/MavbYnwLNidVtzQF9";
+const feedbackCopy =
+  "서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.";
 
 function CtaButton() {
   return (
@@ -23,8 +26,24 @@ function CtaButton() {
       href="/"
       className="inline-flex rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
     >
-      나도 내 관심 종목 체크하기
+      내 관심 종목은 몇 점일까?
     </Link>
+  );
+}
+
+function FeedbackLink() {
+  return (
+    <div className="mt-5 border-t border-slate-200 pt-5">
+      <p className="text-sm leading-6 text-slate-500">{feedbackCopy}</p>
+      <a
+        href={feedbackUrl}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-2 inline-flex text-sm font-semibold text-slate-700 underline underline-offset-4 transition hover:text-slate-950"
+      >
+        의견 보내기
+      </a>
+    </div>
   );
 }
 
@@ -38,6 +57,7 @@ export function ShareReportError({ message = defaultErrorMessage }: { message?: 
         <div className="mt-6">
           <CtaButton />
         </div>
+        <FeedbackLink />
       </div>
     </main>
   );
@@ -196,12 +216,12 @@ export function ShareReportView({ report }: { report: ShareReport }) {
         <section className="rounded-2xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8">
           <h2 className="text-xl font-bold text-slate-950">내 관심 종목도 점검해보기</h2>
           <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-            같은 7가지 기준으로 직접 판단을 남기고 교육용 자기 점검 리포트를 만들어볼 수
-            있습니다.
+            이 리포트처럼 내가 보고 있는 종목도 7가지 기준으로 점검해볼 수 있습니다.
           </p>
           <div className="mt-5">
             <CtaButton />
           </div>
+          <FeedbackLink />
         </section>
       </div>
     </main>
