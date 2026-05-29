@@ -450,3 +450,145 @@ Manual platform testing confirmed that previews appear correctly on:
 - KakaoTalk
 
 This completes the core viral sharing loop for the MVP.
+
+---
+
+## Latest Validation and Tracking Update
+
+### Short Share Links
+
+The app now uses Supabase stored reports for short share links.
+
+Previous share format:
+
+`/share?data=...`
+
+Current main share format:
+
+`/r/[id]`
+
+The legacy `/share?data=...` route is still supported for backward compatibility.
+
+This change was made because long URL-based share links were not reliably clickable in KakaoTalk.
+
+---
+
+### Share Preview Support
+
+Shared report pages now include dynamic preview metadata.
+
+Implemented:
+
+- Dynamic Open Graph metadata
+- Dynamic Twitter Card metadata
+- Dynamic OG image for `/r/[id]`
+- Preview image showing:
+  - Service name
+  - Stock name
+  - Ticker and market when available
+  - Score
+  - Score label
+
+Manual testing confirmed share previews on:
+
+- KakaoTalk
+- X
+- Threads
+
+This completed the core share-preview loop.
+
+---
+
+### Analytics and Event Logging
+
+Vercel Web Analytics was added to observe page visits.
+
+Supabase `event_logs` was added to track lightweight button-click events.
+
+Currently tracked events:
+
+- `share_cta_click`
+- `ai_draft_interest_click`
+- `feedback_click`
+
+Stored data is limited to:
+
+- event name
+- page path
+- report id when available
+- created timestamp
+
+The app does not store:
+
+- name
+- email
+- IP address
+- browser fingerprint
+- login information
+- cookie-based user identifiers
+
+This keeps the tracking lightweight and focused only on product validation.
+
+---
+
+### Current Validation Status
+
+Shared report views are being generated from X and Threads.
+
+However, early data suggests that many visitors read shared reports but do not yet take follow-up actions such as:
+
+- clicking the shared report CTA
+- clicking the AI draft interest button
+- sending feedback
+- creating a new shared report
+
+The current validation question is:
+
+**Do users only consume shared stock reports as content, or do they want to create their own reports?**
+
+Key signals to watch:
+
+- shared report page views
+- `share_cta_click`
+- `ai_draft_interest_click`
+- `feedback_click`
+- new `share_reports` rows created by users
+
+If views continue but no events or new user-created reports appear, the project may need to be paused or repositioned as a content-driven stock report format rather than a user-generated report tool.
+
+---
+
+### AI Draft Interest Experiment
+
+The app now includes an interest button for a possible future AI draft feature.
+
+Button:
+
+**AI 리포트 초안 만들기**
+
+The button links to a Google Form instead of launching an actual AI feature.
+
+Current principle:
+
+- Do not implement AI generation yet.
+- Do not add OpenAI or any AI API yet.
+- Do not add payment yet.
+- Do not add checkout yet.
+- Validate interest first through click logs and form responses.
+
+This prevents unnecessary API cost, payment integration work, and product complexity before demand is confirmed.
+
+---
+
+### Current Decision Rule
+
+For the next validation period, development should pause unless there is a clear signal.
+
+Continue improving the project only if at least one of the following appears from real users:
+
+- `share_cta_click`
+- `ai_draft_interest_click`
+- `feedback_click`
+- new user-created `share_reports` row
+
+If shared report views continue but all action events remain at zero, the project should be reconsidered before further development.
