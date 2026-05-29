@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { TrackedAnchor } from "./click-event-logger";
 import {
   type AnswerKey,
   type CategoryJudgment,
@@ -52,14 +53,15 @@ function AiDraftInterestSection() {
           <p className="mt-2 text-sm leading-6 text-slate-600">{aiDraftInterestCopy}</p>
         </div>
         <div className="flex flex-col items-center text-center sm:shrink-0">
-          <a
+          <TrackedAnchor
             href={aiDraftInterestUrl}
+            eventName="ai_draft_interest_click"
             target="_blank"
             rel="noreferrer"
             className="inline-flex w-full justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50 sm:w-auto"
           >
             AI 리포트 초안 만들기
-          </a>
+          </TrackedAnchor>
         </div>
       </div>
     </section>
@@ -639,14 +641,15 @@ export default function Home() {
 
         <section className="rounded-2xl border border-slate-200 bg-white p-5 text-sm leading-6 text-slate-500 shadow-sm sm:p-6">
           <p>{feedbackCopy}</p>
-          <a
+          <TrackedAnchor
             href={feedbackUrl}
+            eventName="feedback_click"
             target="_blank"
             rel="noreferrer"
             className="mt-2 inline-flex font-semibold text-slate-700 underline underline-offset-4 transition hover:text-slate-950"
           >
             의견 보내기
-          </a>
+          </TrackedAnchor>
         </section>
       </div>
     </main>

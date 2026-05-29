@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { TrackedLink } from "./click-event-logger";
 import {
   dataLimitationNotice,
   investmentDisclaimer,
@@ -26,60 +25,66 @@ const aiDraftInterestTitle = "AI로 리포트 초안 만들기";
 const aiDraftInterestCopy =
   "종목 분석이 어렵다면, AI가 7가지 기준의 리포트 초안을 만들어주는 기능을 준비 중입니다.";
 
-function CtaButton() {
+function CtaButton({ reportId }: { reportId?: string }) {
   return (
-    <Link
+    <TrackedLink
       href="/"
+      eventName="share_cta_click"
+      reportId={reportId}
       className="inline-flex rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700"
     >
       내 관심 종목은 몇 점일까?
-    </Link>
+    </TrackedLink>
   );
 }
 
-function FeedbackLink() {
+function FeedbackLink({ reportId }: { reportId?: string }) {
   return (
     <div className="mt-5 border-t border-slate-200 pt-5">
       <p className="text-sm leading-6 text-slate-500">{feedbackCopy}</p>
-      <a
+      <TrackedLink
         href={feedbackUrl}
+        eventName="feedback_click"
+        reportId={reportId}
         target="_blank"
         rel="noreferrer"
         className="mt-2 inline-flex text-sm font-semibold text-slate-700 underline underline-offset-4 transition hover:text-slate-950"
       >
         의견 보내기
-      </a>
+      </TrackedLink>
     </div>
   );
 }
 
-function TopCtaSection() {
+function TopCtaSection({ reportId }: { reportId?: string }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-6 text-slate-600 sm:text-base">{topCtaCopy}</p>
         <div className="flex justify-center sm:block sm:shrink-0">
-          <CtaButton />
+          <CtaButton reportId={reportId} />
         </div>
       </div>
     </section>
   );
 }
 
-function AiDraftInterestSection() {
+function AiDraftInterestSection({ reportId }: { reportId?: string }) {
   return (
     <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-center sm:text-left">
       <h3 className="text-sm font-bold text-slate-950">{aiDraftInterestTitle}</h3>
       <p className="mt-2 text-sm leading-6 text-slate-600">{aiDraftInterestCopy}</p>
       <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:items-center">
-        <a
+        <TrackedLink
           href={aiDraftInterestUrl}
+          eventName="ai_draft_interest_click"
+          reportId={reportId}
           target="_blank"
           rel="noreferrer"
           className="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50"
         >
           AI 리포트 초안 만들기
-        </a>
+        </TrackedLink>
       </div>
     </div>
   );
@@ -101,7 +106,7 @@ export function ShareReportError({ message = defaultErrorMessage }: { message?: 
   );
 }
 
-export function ShareReportView({ report }: { report: ShareReport }) {
+export function ShareReportView({ report, reportId }: { report: ShareReport; reportId?: string }) {
   const formattedDate = new Intl.DateTimeFormat("ko-KR", {
     year: "numeric",
     month: "long",
@@ -153,7 +158,7 @@ export function ShareReportView({ report }: { report: ShareReport }) {
           </p>
         </section>
 
-        <TopCtaSection />
+        <TopCtaSection reportId={reportId} />
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -259,10 +264,10 @@ export function ShareReportView({ report }: { report: ShareReport }) {
             이 리포트처럼 내가 보고 있는 종목도 7가지 기준으로 점검해볼 수 있습니다.
           </p>
           <div className="mt-5">
-            <CtaButton />
+            <CtaButton reportId={reportId} />
           </div>
-          <AiDraftInterestSection />
-          <FeedbackLink />
+          <AiDraftInterestSection reportId={reportId} />
+          <FeedbackLink reportId={reportId} />
         </section>
       </div>
     </main>

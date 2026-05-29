@@ -65,5 +65,5 @@ export default async function StoredSharePage({ params }: StoredSharePageProps) 
     return <ShareReportError />;
   }
 
-  return <ShareReportView report={report} />;
+  return <ShareReportView report={report} reportId={id} />;
 }
