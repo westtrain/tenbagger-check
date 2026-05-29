@@ -21,6 +21,10 @@ const feedbackCopy =
   "서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.";
 const topCtaCopy =
   "종목명만 입력하면 7가지 기준으로 나만의 종목 판단 리포트를 만들 수 있습니다.";
+const aiDraftInterestUrl = "https://forms.gle/bjUHGUjcFecCzH7r8";
+const aiDraftInterestTitle = "AI로 리포트 초안 만들기";
+const aiDraftInterestCopy =
+  "종목 분석이 어렵다면, AI가 7가지 기준의 리포트 초안을 만들어주는 기능을 준비 중입니다.";
 
 function CtaButton() {
   return (
@@ -59,6 +63,25 @@ function TopCtaSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+function AiDraftInterestSection() {
+  return (
+    <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-center sm:text-left">
+      <h3 className="text-sm font-bold text-slate-950">{aiDraftInterestTitle}</h3>
+      <p className="mt-2 text-sm leading-6 text-slate-600">{aiDraftInterestCopy}</p>
+      <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:items-center">
+        <a
+          href={aiDraftInterestUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50"
+        >
+          AI 리포트 초안 만들기
+        </a>
+      </div>
+    </div>
   );
 }
 
@@ -238,6 +261,7 @@ export function ShareReportView({ report }: { report: ShareReport }) {
           <div className="mt-5">
             <CtaButton />
           </div>
+          <AiDraftInterestSection />
           <FeedbackLink />
         </section>
       </div>

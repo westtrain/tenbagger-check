@@ -38,6 +38,33 @@ const authorSummaryEmptyText = "작성된 총평이 없습니다.";
 const feedbackUrl = "https://forms.gle/MavbYnwLNidVtzQF9";
 const feedbackCopy =
   "서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.";
+const aiDraftInterestUrl = "https://forms.gle/bjUHGUjcFecCzH7r8";
+const aiDraftInterestTitle = "AI로 리포트 초안 만들기";
+const aiDraftInterestCopy =
+  "종목 분석이 어렵다면, AI가 7가지 기준의 리포트 초안을 만들어주는 기능을 준비 중입니다.";
+
+function AiDraftInterestSection() {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-base font-bold text-slate-950">{aiDraftInterestTitle}</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">{aiDraftInterestCopy}</p>
+        </div>
+        <div className="flex flex-col items-center text-center sm:shrink-0">
+          <a
+            href={aiDraftInterestUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-full justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-800 transition hover:border-slate-500 hover:bg-slate-50 sm:w-auto"
+          >
+            AI 리포트 초안 만들기
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function StockBadge({ stock }: { stock: StockMetadata }) {
   return (
@@ -328,6 +355,8 @@ export default function Home() {
             살펴봐야 합니다.
           </p>
         </section>
+
+        {selectedStock ? <AiDraftInterestSection /> : null}
 
         <section className="grid gap-4">
           {checklistCards.map((card, index) => {

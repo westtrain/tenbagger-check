@@ -2,34 +2,64 @@
 
 ## Task Name
 
-Improve shared report CTA placement.
+Add AI draft feature interest buttons.
 
 ## Purpose
 
-Shared report pages are getting views, but users are not yet creating their own reports.
+Users are viewing shared reports, but they are not yet creating their own reports.
 
-The goal is to make the CTA more visible and easier to understand by adding an additional CTA near the top of the shared report page.
+One likely reason is that manually answering seven checklist items and writing memos feels difficult or time-consuming.
+
+The goal is to test interest in a future AI report draft feature without implementing AI generation or payment.
 
 ## Must Do
 
-1. Add an additional CTA section near the top of the shared report page.
-2. Place it after the main hero/summary area or near the first score summary area.
-3. Keep the existing bottom CTA.
-4. Use this CTA button text:
+1. Add a small AI draft feature section on the main report creation page after a stock is selected and before the checklist begins.
+2. Add a similar small AI draft feature section on the shared report page near the bottom CTA / feedback area.
+3. Use this title:
 
-내 관심 종목은 몇 점일까?
+AI로 리포트 초안 만들기
 
-5. Use this supporting copy:
+4. Use this supporting copy:
 
-종목명만 입력하면 7가지 기준으로 나만의 종목 판단 리포트를 만들 수 있습니다.
+종목 분석이 어렵다면, AI가 7가지 기준의 리포트 초안을 만들어주는 기능을 준비 중입니다.
 
-6. The CTA should link to `/`.
-7. The CTA should be visually noticeable but not too aggressive.
-8. The CTA should look good on mobile.
+5. Add a button with this text:
+
+AI 리포트 초안 만들기
+
+6. Add small helper text near the button:
+
+아직 준비 중인 기능입니다. 사용 의향을 알려주세요.
+
+7. Link the button to this Google Form:
+
+https://forms.gle/bjUHGUjcFecCzH7r8
+
+8. Open the Google Form in a new tab.
+9. Keep the section visually small and low-distraction.
+10. Do not make it look like the AI feature is already available inside the app.
+
+## Main Page Placement
+
+On the main report creation page:
+
+- Show the section only after a stock has been selected.
+- Place it before the seven checklist cards.
+- Do not show it above the stock search area.
+
+## Share Page Placement
+
+On the shared report page:
+
+- Place the section near the lower CTA / feedback area.
+- Do not place it above the main shared report content.
+- Keep the existing top CTA and bottom CTA unchanged.
 
 ## Must Preserve
 
-- Existing bottom CTA
+- Existing report creation flow
+- Existing shared report CTA
 - Existing feedback link
 - Existing short `/r/[id]` share links
 - Existing share preview metadata and OG image
@@ -40,20 +70,22 @@ The goal is to make the CTA more visible and easier to understand by adding an a
 
 ## Must Not Do
 
-- Do not change scoring logic.
-- Do not change report save/load behavior.
-- Do not change OG image or metadata.
-- Do not change stock search or direct input behavior.
+- Do not implement AI report generation.
+- Do not add OpenAI or any AI API.
+- Do not add payment.
+- Do not add checkout.
+- Do not add a feedback database table.
 - Do not add authentication.
 - Do not add user accounts.
 - Do not add custom event tracking.
-- Do not add new dependencies.
+- Do not change scoring logic.
+- Do not change report save/load behavior.
+- Do not change required disclaimer text.
 
 ## Definition of Done
 
-- Shared report page has a CTA near the top.
-- Existing bottom CTA remains.
-- CTA button text is "내 관심 종목은 몇 점일까?"
-- CTA links to `/`.
-- Mobile layout looks balanced.
+- Main page shows the AI draft interest section after stock selection and before checklist.
+- Shared report page shows the AI draft interest section near the bottom CTA / feedback area.
+- Buttons link to the Google Form in a new tab.
+- Sections clearly say the feature is being prepared, not already available.
 - Existing report/share flows still work.
