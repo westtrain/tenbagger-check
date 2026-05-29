@@ -19,6 +19,8 @@ const authorSummaryEmptyText = "작성된 총평이 없습니다.";
 const feedbackUrl = "https://forms.gle/MavbYnwLNidVtzQF9";
 const feedbackCopy =
   "서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.";
+const topCtaCopy =
+  "종목명만 입력하면 7가지 기준으로 나만의 종목 판단 리포트를 만들 수 있습니다.";
 
 function CtaButton() {
   return (
@@ -44,6 +46,19 @@ function FeedbackLink() {
         의견 보내기
       </a>
     </div>
+  );
+}
+
+function TopCtaSection() {
+  return (
+    <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm leading-6 text-slate-600 sm:text-base">{topCtaCopy}</p>
+        <div className="flex justify-center sm:block sm:shrink-0">
+          <CtaButton />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -114,6 +129,8 @@ export function ShareReportView({ report }: { report: ShareReport }) {
             {report.interpretation}
           </p>
         </section>
+
+        <TopCtaSection />
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">

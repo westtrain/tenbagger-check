@@ -2,63 +2,58 @@
 
 ## Task Name
 
-Improve share page CTA and add feedback link.
+Improve shared report CTA placement.
 
 ## Purpose
 
-The shared report page gets views, but users are not yet creating new reports.
+Shared report pages are getting views, but users are not yet creating their own reports.
 
-The goal is to improve the CTA from the shared report page and add a lightweight feedback link for early users.
+The goal is to make the CTA more visible and easier to understand by adding an additional CTA near the top of the shared report page.
 
 ## Must Do
 
-1. Change the shared report CTA button text to:
+1. Add an additional CTA section near the top of the shared report page.
+2. Place it after the main hero/summary area or near the first score summary area.
+3. Keep the existing bottom CTA.
+4. Use this CTA button text:
 
 내 관심 종목은 몇 점일까?
 
-2. Add supporting CTA copy near the button:
+5. Use this supporting copy:
 
-이 리포트처럼 내가 보고 있는 종목도 7가지 기준으로 점검해볼 수 있습니다.
+종목명만 입력하면 7가지 기준으로 나만의 종목 판단 리포트를 만들 수 있습니다.
 
-3. Add a lightweight feedback link using the Google Form URL:
-
-https://forms.gle/MavbYnwLNidVtzQF9
-
-4. Feedback link text:
-
-의견 보내기
-
-5. Feedback supporting copy:
-
-서비스를 써보며 불편한 점이나 추가되면 좋을 기능이 있다면 알려주세요.
-
-6. Open the feedback link in a new tab.
-7. Add the feedback link in a low-distraction area, preferably near the bottom of the main page and shared report page.
-8. Do not build a custom feedback system.
+6. The CTA should link to `/`.
+7. The CTA should be visually noticeable but not too aggressive.
+8. The CTA should look good on mobile.
 
 ## Must Preserve
 
-- Existing report creation flow
-- Short `/r/[id]` share links
-- Share preview metadata and OG image
-- Supabase report save/load flow
+- Existing bottom CTA
+- Existing feedback link
+- Existing short `/r/[id]` share links
+- Existing share preview metadata and OG image
+- Existing Supabase report save/load flow
 - Existing scoring logic
 - Existing stock search and direct input behavior
 - Required investment disclaimer text
 
 ## Must Not Do
 
-- Do not add a feedback database table.
+- Do not change scoring logic.
+- Do not change report save/load behavior.
+- Do not change OG image or metadata.
+- Do not change stock search or direct input behavior.
 - Do not add authentication.
 - Do not add user accounts.
 - Do not add custom event tracking.
-- Do not change scoring logic.
-- Do not change report save/load behavior.
-- Do not change required disclaimer text.
+- Do not add new dependencies.
 
 ## Definition of Done
 
-- Shared report CTA is more curiosity-driven.
-- Feedback link is visible but not distracting.
-- Feedback link opens the Google Form in a new tab.
-- Existing share/report flows still work.
+- Shared report page has a CTA near the top.
+- Existing bottom CTA remains.
+- CTA button text is "내 관심 종목은 몇 점일까?"
+- CTA links to `/`.
+- Mobile layout looks balanced.
+- Existing report/share flows still work.
